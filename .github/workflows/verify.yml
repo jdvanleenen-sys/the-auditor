@@ -19,7 +19,7 @@ jobs:
 
       - name: No accidental real-world PII in the synthetic sample listing
         run: |
-          if grep -Ein '[0-9]{3}-[0-9]{3}-[0-9]{4}|@gmail\.com|@fifthaveproperties\.com' sample-listing.md; then
+          if grep -Ein '[0-9]{3}-[0-9]{3}-[0-9]{4}|@gmail\.com|@fifthaveproperties\.com' reference/fair-housing/sample-listing.md; then
             echo "::error::sample-listing.md should stay fully synthetic, no real contact info"
             exit 1
           fi

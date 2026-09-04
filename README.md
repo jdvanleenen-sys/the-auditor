@@ -24,13 +24,13 @@ flowchart LR
 3. Read `identity.md` and `rules.md` first so you know the report shape it's going to produce. Then hand over the artifact.
 4. You get back one finding per line: a located quote, PASS or FAIL, a severity (Pass / Violation / High-risk / Cautionary / Out of scope), and the exact provision text it's citing.
 
-See `examples.md` for three worked audits before you run your first real one. `sample-listing.md` is the synthetic listing this build's own tests run against — audit it yourself and compare your findings to `verify/audits/sample-listing.findings.json` if you want to sanity-check the auditor before trusting it on something real.
+See `examples.md` for three worked audits before you run your first real one. `reference/fair-housing/sample-listing.md` is the synthetic listing this build's own tests run against — audit it yourself and compare your findings to `verify/audits/fair-housing/sample-listing.findings.json` if you want to sanity-check the auditor before trusting it on something real.
 
 ## The one rule
 
 **Every finding cites a provision, and the citation is checkable.** `reference/` holds the actual text of 42 U.S.C. § 3604(c) and 24 CFR § 100.75, quoted word for word from the U.S. Code and the Code of Federal Regulations, not a summary and not a link. Open any FAIL finding, open the provision it names in `reference/`, and read them side by side. If the finding's quoted law doesn't match what's actually in `reference/`, the finding is wrong, full stop — and `verify/check.mjs` exists specifically to catch that before you ever see it.
 
-`reference/phrase-guidance.md` is different: it's sourced guidance (HUD's informal guidance, the National Fair Housing Alliance, real-estate trade associations), not binding law, and every finding that leans on it also has to name the binding provision underneath. See `rules.md` for exactly how that works, including the one place the law itself has a trap: HUD's old advertising word-list regulation was pulled from the books in 1996. It gets treated as guidance here, never cited as current law.
+`reference/fair-housing/phrase-guidance.md` is different: it's sourced guidance (HUD's informal guidance, the National Fair Housing Alliance, real-estate trade associations), not binding law, and every finding that leans on it also has to name the binding provision underneath. See `rules.md` for exactly how that works, including the one place the law itself has a trap: HUD's old advertising word-list regulation was pulled from the books in 1996. It gets treated as guidance here, never cited as current law.
 
 ## What it won't do
 
@@ -44,4 +44,4 @@ It doesn't give legal advice, doesn't predict how a court would rule, and doesn'
 
 ## What's synthetic here
 
-`sample-listing.md` is a listing I wrote for this repo. No real property, agent, or brokerage. It exists to give the auditor (and its own tests) a realistic artifact with a real spread of clean lines, violations, and one contested phrase to check against.
+`reference/fair-housing/sample-listing.md` is a listing I wrote for this repo. No real property, agent, or brokerage. It exists to give the auditor (and its own tests) a realistic artifact with a real spread of clean lines, violations, and one contested phrase to check against.

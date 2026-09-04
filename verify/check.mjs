@@ -1,29 +1,39 @@
 #!/usr/bin/env node
-// Verify Auditor findings against the real standard in reference/. Fails loud, exits non-zero.
+// Verify Auditor findings against the active cartridge(s)' standard(s) in reference/<id>/. Fails loud, exits non-zero.
+//
+// A cartridge is any reference/<id>/ folder that has a cartridge.json manifest. Fair Housing is
+// the one cartridge shipped today; a second standard is added by adding a folder, not by editing
+// this file. See reference/fair-housing/cartridge.json for the manifest shape.
+//
 // Usage:
-//   node verify/check.mjs                 - validate every real audit in verify/audits/, run coverage, then
-//                                            confirm every verify/fixtures/fail_*.json fails as required
-//   node verify/check.mjs --file <path>   - validate one audit file only, print its errors, exit 1 if any
+//   node verify/check.mjs                 - validate every real audit for every discovered cartridge,
+//                                            run each cartridge's coverage checks, then confirm every
+//                                            verify/fixtures/fail_*.json fails as required
+//   node verify/check.mjs --file <path>   - validate one audit file only (cartridge inferred from its
+//                                            parent folder under verify/audits/<id>/), exit 1 if any error
 //
-// Four checks, every finding gets all four:
-//   1. anchor      - every citation.provision exists in reference/ (or is the general "100.75" id)
-//   2. verbatim    - every citation.text matches the reference/ span for that provision, byte for byte
-//                    (after stripping markdown decoration and blockquote/bold markers - see normalize())
+// Four checks, every finding gets all four, same as before the refactor - only where each check reads
+// its cartridge-specific data (anchors, flagged phrases, classes, required provisions) changed:
+//   1. anchor      - every citation.provision exists in the cartridge's reference/ (or is one of its
+//                    generalOnlyIds)
+//   2. verbatim    - every citation.text matches the cartridge's reference/ span for that provision,
+//                    byte for byte (after normalize() strips markdown decoration)
 //   3. shape       - every finding has an id, a quote, a verdict, and the fields that verdict requires
-//   4. phrase sanity - a PASS finding can't quote a phrase reference/phrase-guidance.md flags as discriminatory
+//                    (engine-generic - not cartridge-specific, unchanged from before the refactor)
+//   4. phrase sanity - a PASS finding can't quote a phrase the cartridge's phrase file flags
 //
-// Plus two coverage checks, run across every real audit together (not fixtures):
-//   5. class coverage    - all seven protected classes in reference/protected-classes.md appear in some finding
-//   6. artifact coverage - every numbered line in sample-listing.md has a matching finding (rule 3: every line
-//                          gets walked, pass or fail, not just the bad ones)
-import { readFileSync, readdirSync } from 'node:fs';
+// Plus two coverage checks per cartridge, run across that cartridge's real audits together:
+//   5. class coverage      - every class in the cartridge's manifest appears in some finding
+//   6. provision coverage  - every requiredProvisions group has at least one id actually cited
+//   7. artifact coverage   - every numbered line in the cartridge's artifact has a matching finding
+import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname, join, basename } from 'node:path';
+import { dirname, join } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
 
-// ---------- reference/ parsing ----------
+// ---------- engine-generic helpers ----------
 
 function normalize(span) {
   let t = span.trim();
@@ -34,11 +44,12 @@ function normalize(span) {
   return t.replace(/\s+/g, ' ').trim();
 }
 
-function loadAnchors() {
-  const files = ['42-usc-3604c.md', '24-cfr-100.75.md'].map((f) => join(root, 'reference', f));
+// ---------- cartridge loading ----------
+
+function loadAnchorsForCartridge(cartridgeDir, standardFiles) {
   const anchors = new Map();
-  for (const path of files) {
-    const text = readFileSync(path, 'utf8');
+  for (const fname of standardFiles) {
+    const text = readFileSync(join(cartridgeDir, fname), 'utf8');
     const re = /<!--\s*verbatim:(\S+)\s*-->([\s\S]*?)<!--\s*\/verbatim\s*-->/g;
     let m;
     while ((m = re.exec(text))) anchors.set(m[1], normalize(m[2]));
@@ -46,12 +57,8 @@ function loadAnchors() {
   return anchors;
 }
 
-// A citation may also use the bare "100.75" id to mean "this regulation generally."
-// It's a valid anchor (passes the anchor-check) but has no single span, so it's exempt from verbatim-check.
-const GENERAL_ONLY_IDS = new Set(['100.75']);
-
-function loadFlaggedPhrases() {
-  const text = readFileSync(join(root, 'reference', 'phrase-guidance.md'), 'utf8');
+function loadFlaggedPhrasesForCartridge(cartridgeDir, phraseFile) {
+  const text = readFileSync(join(cartridgeDir, phraseFile), 'utf8');
   const cutoff = text.indexOf('## Explicitly acceptable');
   const scoped = cutoff === -1 ? text : text.slice(0, cutoff);
   const phrases = [];
@@ -63,7 +70,38 @@ function loadFlaggedPhrases() {
   return phrases;
 }
 
-const PROTECTED_CLASSES = ['race', 'color', 'religion', 'sex', 'disability', 'familial status', 'national origin'];
+function loadCartridges() {
+  const referenceDir = join(root, 'reference');
+  const cartridges = [];
+  for (const entry of readdirSync(referenceDir)) {
+    const dir = join(referenceDir, entry);
+    if (!statSync(dir).isDirectory()) continue;
+    const manifestPath = join(dir, 'cartridge.json');
+    if (!existsSync(manifestPath)) continue;
+    const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+    const auditsDir = join(root, 'verify', 'audits', manifest.id);
+    const audits = existsSync(auditsDir)
+      ? readdirSync(auditsDir)
+          .filter((f) => f.endsWith('.findings.json'))
+          .map((f) => ({ file: f, ...JSON.parse(readFileSync(join(auditsDir, f), 'utf8')) }))
+      : [];
+    cartridges.push({
+      id: manifest.id,
+      name: manifest.name,
+      dir,
+      anchors: loadAnchorsForCartridge(dir, manifest.standardFiles),
+      flaggedPhrases: loadFlaggedPhrasesForCartridge(dir, manifest.phraseFile),
+      classes: manifest.classes,
+      generalOnlyIds: new Set(manifest.generalOnlyIds || []),
+      requiredProvisions: manifest.requiredProvisions || [],
+      artifactPath: join(dir, manifest.artifact),
+      artifactAuditPath: join(auditsDir, manifest.artifactAudit),
+      auditsDir,
+      audits,
+    });
+  }
+  return cartridges;
+}
 
 // ---------- audit JSON validation ----------
 
@@ -88,36 +126,36 @@ function shapeCheck(f, errs) {
   } else if (f.verdict === 'OUT_OF_SCOPE') {
     if (f.severity !== null && f.severity !== undefined) errs.push(`${where}: OUT_OF_SCOPE finding must have severity null`);
     if (Array.isArray(f.citations) && f.citations.length > 0) {
-      errs.push(`${where}: OUT_OF_SCOPE finding must not cite 3604c/100.75 - they don't reach it (rules.md rule 5)`);
+      errs.push(`${where}: OUT_OF_SCOPE finding must not cite a binding provision - it doesn't reach it (rules.md rule 5)`);
     }
     if (!f.note) errs.push(`${where}: OUT_OF_SCOPE finding must explain why in a note`);
   }
 }
 
-function anchorAndVerbatimCheck(f, anchors, errs) {
+function anchorAndVerbatimCheck(f, cartridge, errs) {
   const where = f.id || '(missing id)';
   for (const c of f.citations || []) {
-    if (!c.provision || !anchors.has(c.provision) && !GENERAL_ONLY_IDS.has(c.provision)) {
-      errs.push(`${where}: citation provision "${c.provision}" is not in reference/`);
+    if (!c.provision || (!cartridge.anchors.has(c.provision) && !cartridge.generalOnlyIds.has(c.provision))) {
+      errs.push(`${where}: citation provision "${c.provision}" is not in reference/${cartridge.id}/`);
       continue;
     }
-    if (GENERAL_ONLY_IDS.has(c.provision)) continue; // no single span to verbatim-check
-    const truth = anchors.get(c.provision);
+    if (cartridge.generalOnlyIds.has(c.provision)) continue; // no single span to verbatim-check
+    const truth = cartridge.anchors.get(c.provision);
     const claimed = normalize(c.text || '');
     if (claimed !== truth) {
-      errs.push(`${where}: citation "${c.provision}" does not match reference/ verbatim\n    claimed: ${claimed}\n    actual:  ${truth}`);
+      errs.push(`${where}: citation "${c.provision}" does not match reference/${cartridge.id}/ verbatim\n    claimed: ${claimed}\n    actual:  ${truth}`);
     }
   }
 }
 
-function phraseSanityCheck(f, flaggedPhrases, errs) {
+function phraseSanityCheck(f, cartridge, errs) {
   if (f.verdict !== 'PASS') return;
   const q = (f.quote || '').toLowerCase();
-  const hit = flaggedPhrases.find((p) => q.includes(p));
-  if (hit) errs.push(`${f.id}: verdict is PASS but quote contains a flagged phrase ("${hit}") from phrase-guidance.md`);
+  const hit = cartridge.flaggedPhrases.find((p) => q.includes(p));
+  if (hit) errs.push(`${f.id}: verdict is PASS but quote contains a flagged phrase ("${hit}") from ${cartridge.id}'s phrase guidance`);
 }
 
-function validateAudit(audit, anchors, flaggedPhrases) {
+function validateAudit(audit, cartridge) {
   const errs = [];
   if (!Array.isArray(audit.findings) || audit.findings.length === 0) {
     errs.push('audit has no findings array, or it is empty');
@@ -125,116 +163,126 @@ function validateAudit(audit, anchors, flaggedPhrases) {
   }
   for (const f of audit.findings) {
     shapeCheck(f, errs);
-    anchorAndVerbatimCheck(f, anchors, errs);
-    phraseSanityCheck(f, flaggedPhrases, errs);
+    anchorAndVerbatimCheck(f, cartridge, errs);
+    phraseSanityCheck(f, cartridge, errs);
   }
   return errs;
 }
 
-// ---------- coverage checks (run across every real audit together) ----------
+// ---------- coverage checks (per cartridge, across that cartridge's own real audits) ----------
 
-function classCoverage(audits) {
+function classCoverage(cartridge) {
   const seen = new Set();
-  for (const a of audits) {
+  for (const a of cartridge.audits) {
     for (const f of a.findings) {
       if (!f.protectedClass) continue;
       const pc = f.protectedClass.toLowerCase();
-      for (const cls of PROTECTED_CLASSES) if (pc.includes(cls)) seen.add(cls);
+      for (const cls of cartridge.classes) if (pc.includes(cls)) seen.add(cls);
     }
   }
-  return PROTECTED_CLASSES.filter((c) => !seen.has(c));
+  return cartridge.classes.filter((c) => !seen.has(c));
 }
 
-function provisionCoverage(audits) {
+function provisionCoverage(cartridge) {
   const seen = new Set();
-  for (const a of audits) for (const f of a.findings) for (const c of f.citations || []) seen.add(c.provision);
-  const missing = [];
-  if (!seen.has('3604c')) missing.push('3604c');
-  if (!['100.75c1', '100.75c2', '100.75c3', '100.75c4'].some((id) => seen.has(id))) {
-    missing.push('at least one of 100.75c1-c4');
+  for (const a of cartridge.audits) for (const f of a.findings) for (const c of f.citations || []) seen.add(c.provision);
+  const missingGroups = [];
+  for (const group of cartridge.requiredProvisions) {
+    if (!group.some((id) => seen.has(id))) missingGroups.push(group.join(' or '));
   }
-  return missing;
+  return missingGroups;
 }
 
-function artifactLineCoverage() {
-  const listingPath = join(root, 'sample-listing.md');
-  const listing = readFileSync(listingPath, 'utf8');
-  const lineIds = [...listing.matchAll(/\*\*(L\d+)\.\*\*/g)].map((m) => m[1]);
-  const auditPath = join(root, 'verify', 'audits', 'sample-listing.findings.json');
-  const audit = JSON.parse(readFileSync(auditPath, 'utf8'));
+function artifactLineCoverage(cartridge) {
+  if (!existsSync(cartridge.artifactPath) || !existsSync(cartridge.artifactAuditPath)) {
+    return [`artifact or artifact-audit file missing for cartridge ${cartridge.id}`];
+  }
+  const artifactText = readFileSync(cartridge.artifactPath, 'utf8');
+  const lineIds = [...artifactText.matchAll(/\*\*(L\d+)\.\*\*/g)].map((m) => m[1]);
+  const audit = JSON.parse(readFileSync(cartridge.artifactAuditPath, 'utf8'));
   const foundIds = new Set(audit.findings.map((f) => f.id));
   return lineIds.filter((id) => !foundIds.has(id));
 }
 
 // ---------- runner ----------
 
-function loadRealAudits() {
-  const dir = join(root, 'verify', 'audits');
-  return readdirSync(dir)
-    .filter((f) => f.endsWith('.findings.json'))
-    .map((f) => ({ file: f, ...JSON.parse(readFileSync(join(dir, f), 'utf8')) }));
+function findCartridgeForFile(cartridges, filePath) {
+  const parts = filePath.replace(/\\/g, '/').split('/');
+  const idx = parts.lastIndexOf('audits');
+  if (idx !== -1 && parts[idx + 1]) {
+    const found = cartridges.find((c) => c.id === parts[idx + 1]);
+    if (found) return found;
+  }
+  return null;
 }
 
 function main() {
-  const anchors = loadAnchors();
-  const flaggedPhrases = loadFlaggedPhrases();
+  const cartridges = loadCartridges();
   const fileArgIdx = process.argv.indexOf('--file');
 
   if (fileArgIdx !== -1) {
     const path = process.argv[fileArgIdx + 1];
+    // Fixtures live in verify/fixtures/, not under a cartridge folder - they're engine-shape tests,
+    // written against the fair-housing cartridge's anchors and phrases. Any other path infers its
+    // cartridge from verify/audits/<id>/.
+    const cartridge = findCartridgeForFile(cartridges, path) || cartridges.find((c) => c.id === 'fair-housing') || cartridges[0];
     const audit = JSON.parse(readFileSync(path, 'utf8'));
-    const errs = validateAudit(audit, anchors, flaggedPhrases);
+    const errs = validateAudit(audit, cartridge);
     if (errs.length) {
-      console.error(`FAIL: ${path}`);
+      console.error(`FAIL: ${path} (cartridge: ${cartridge.id})`);
       for (const e of errs) console.error(`  - ${e}`);
       process.exit(1);
     }
-    console.log(`ok: ${path}`);
+    console.log(`ok: ${path} (cartridge: ${cartridge.id})`);
     return;
   }
 
   let failed = false;
-  const audits = loadRealAudits();
-  for (const a of audits) {
-    const errs = validateAudit(a, anchors, flaggedPhrases);
-    if (errs.length) {
+
+  for (const cartridge of cartridges) {
+    console.log(`--- cartridge: ${cartridge.id} (${cartridge.name}) ---`);
+    for (const a of cartridge.audits) {
+      const errs = validateAudit(a, cartridge);
+      if (errs.length) {
+        failed = true;
+        console.error(`FAIL: verify/audits/${cartridge.id}/${a.file}`);
+        for (const e of errs) console.error(`  - ${e}`);
+      } else {
+        console.log(`ok: verify/audits/${cartridge.id}/${a.file} (${a.findings.length} findings)`);
+      }
+    }
+
+    const missingClasses = classCoverage(cartridge);
+    if (missingClasses.length) {
       failed = true;
-      console.error(`FAIL: verify/audits/${a.file}`);
-      for (const e of errs) console.error(`  - ${e}`);
+      console.error(`FAIL [${cartridge.id}]: class coverage - never exercised: ${missingClasses.join(', ')}`);
     } else {
-      console.log(`ok: verify/audits/${a.file} (${a.findings.length} findings)`);
+      console.log(`ok [${cartridge.id}]: all classes exercised across its audits`);
+    }
+
+    const missingProvisions = provisionCoverage(cartridge);
+    if (missingProvisions.length) {
+      failed = true;
+      console.error(`FAIL [${cartridge.id}]: provision coverage - never cited: ${missingProvisions.join('; ')}`);
+    } else {
+      console.log(`ok [${cartridge.id}]: every required provision group is cited`);
+    }
+
+    const missingLines = artifactLineCoverage(cartridge);
+    if (missingLines.length) {
+      failed = true;
+      console.error(`FAIL [${cartridge.id}]: artifact lines never audited: ${missingLines.join(', ')}`);
+    } else {
+      console.log(`ok [${cartridge.id}]: every artifact line has a finding`);
     }
   }
 
-  const missingClasses = classCoverage(audits);
-  if (missingClasses.length) {
-    failed = true;
-    console.error(`FAIL: class coverage - never exercised: ${missingClasses.join(', ')}`);
-  } else {
-    console.log('ok: all seven protected classes exercised across examples.md + sample-listing.md');
-  }
-
-  const missingProvisions = provisionCoverage(audits);
-  if (missingProvisions.length) {
-    failed = true;
-    console.error(`FAIL: provision coverage - never cited: ${missingProvisions.join(', ')}`);
-  } else {
-    console.log('ok: 3604c and at least one 100.75(c) example both cited');
-  }
-
-  const missingLines = artifactLineCoverage();
-  if (missingLines.length) {
-    failed = true;
-    console.error(`FAIL: sample-listing.md lines never audited: ${missingLines.join(', ')}`);
-  } else {
-    console.log('ok: every line of sample-listing.md has a finding (rule 3: pass and fail both reported)');
-  }
-
+  const fhCartridge = cartridges.find((c) => c.id === 'fair-housing');
   const fixturesDir = join(root, 'verify', 'fixtures');
   for (const f of readdirSync(fixturesDir).filter((f) => f.startsWith('fail_'))) {
     const path = join(fixturesDir, f);
     const audit = JSON.parse(readFileSync(path, 'utf8'));
-    const errs = validateAudit(audit, anchors, flaggedPhrases);
+    const errs = validateAudit(audit, fhCartridge);
     if (errs.length === 0) {
       failed = true;
       console.error(`FAIL: fixture ${f} was supposed to fail validation but passed - the gate it tests is dead`);

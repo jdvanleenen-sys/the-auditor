@@ -1,0 +1,11 @@
+{
+  "id": "fair-housing",
+  "name": "Fair Housing Act advertising rules",
+  "standardFiles": ["42-usc-3604c.md", "24-cfr-100.75.md"],
+  "phraseFile": "phrase-guidance.md",
+  "classes": ["race", "color", "religion", "sex", "disability", "familial status", "national origin"],
+  "generalOnlyIds": ["100.75"],
+  "requiredProvisions": [["3604c"], ["100.75c1", "100.75c2", "100.75c3", "100.75c4"]],
+  "artifact": "sample-listing.md",
+  "artifactAudit": "sample-listing.findings.json"
+}

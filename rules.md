@@ -5,9 +5,9 @@ Run these in order. You don't write a finding until you've read the standard.
 ## 1. Read order
 
 1. `identity.md` (you've read this if you're here).
-2. `reference/protected-classes.md` — the seven classes you check against, and nothing else.
-3. `reference/42-usc-3604c.md` and `reference/24-cfr-100.75.md` — the two binding provisions, in full. Do not skip the accuracy note in `24-cfr-100.75.md` about the withdrawn Part 109 word list.
-4. `reference/phrase-guidance.md` — sourced examples, useful for pattern recognition, never binding on their own.
+2. `reference/fair-housing/protected-classes.md` — the seven classes you check against, and nothing else.
+3. `reference/fair-housing/42-usc-3604c.md` and `reference/fair-housing/24-cfr-100.75.md` — the two binding provisions, in full. Do not skip the accuracy note in `24-cfr-100.75.md` about the withdrawn Part 109 word list.
+4. `reference/fair-housing/phrase-guidance.md` — sourced examples, useful for pattern recognition, never binding on their own.
 5. `examples.md` — two or three worked audits, so you see the report shape before you write one.
 6. The artifact you were handed.
 
@@ -28,7 +28,7 @@ A finding has exactly four parts. Missing any one of them means it is not a find
 
 ## 3. Report PASS and FAIL, not just FAIL
 
-Walk the whole artifact line by line, or clause by clause for a dense paragraph. Every line gets a finding, pass or fail. A report with only FAIL findings is a red flag that the artifact wasn't actually walked in full, only skimmed for trouble. `verify/` enforces a coverage check for this on the shipped sample artifact: every line of `sample-listing.md` must appear in the corresponding audit's findings.
+Walk the whole artifact line by line, or clause by clause for a dense paragraph. Every line gets a finding, pass or fail. A report with only FAIL findings is a red flag that the artifact wasn't actually walked in full, only skimmed for trouble. `verify/` enforces a coverage check for this on the shipped sample artifact: every line of `reference/fair-housing/sample-listing.md` must appear in the corresponding audit's findings.
 
 ## 4. Refuse to flag anything not tied to a provision
 
@@ -46,7 +46,7 @@ A phrase on the guidance list ("walk to schools," for example, is explicitly *no
 
 - "Walk-in closets" and "walk to schools" describe the property. Not flagged, ever, on their own.
 - "Must be able-bodied to enjoy the walk to the park" changes the subject from the property to the occupant's body. That's a different sentence doing a different thing, and it gets flagged even though "walk to the park" alone would not be.
-- A phrase like "bachelor pad" sitting alone in a features list ("cozy bachelor pad, one bedroom") is Cautionary at most. The same phrase paired with "perfect for a single guy" compounds toward High-risk or Violation, because now two clauses are doing the same coded work together. Cite both clauses in one finding when they work together; don't split them into two weaker findings. Compounding only happens when the second clause codes the *same* protected class as the first. A neutral, non-class modifier next to a contested phrase ("bachelor pad for a young professional") doesn't compound it — "young professional" isn't sex- or marital-status-coded, it's ordinary rental marketing language, and rule 4 already bars inventing a finding (like an age angle) that isn't tied to a citation or a `phrase-guidance.md` pattern. When in doubt, ask whether the second clause names or implies membership in one of the seven classes in `reference/protected-classes.md`. If it doesn't, it's not compounding, whatever else it might be doing rhetorically.
+- A phrase like "bachelor pad" sitting alone in a features list ("cozy bachelor pad, one bedroom") is Cautionary at most. The same phrase paired with "perfect for a single guy" compounds toward High-risk or Violation, because now two clauses are doing the same coded work together. Cite both clauses in one finding when they work together; don't split them into two weaker findings. Compounding only happens when the second clause codes the *same* protected class as the first. A neutral, non-class modifier next to a contested phrase ("bachelor pad for a young professional") doesn't compound it — "young professional" isn't sex- or marital-status-coded, it's ordinary rental marketing language, and rule 4 already bars inventing a finding (like an age angle) that isn't tied to a citation or a `phrase-guidance.md` pattern. When in doubt, ask whether the second clause names or implies membership in one of the seven classes in `reference/fair-housing/protected-classes.md`. If it doesn't, it's not compounding, whatever else it might be doing rhetorically.
 
 ## 7. Verbatim, always
 
