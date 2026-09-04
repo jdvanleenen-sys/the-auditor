@@ -107,7 +107,7 @@ function loadCartridges() {
 
 // ---------- audit JSON validation ----------
 
-function shapeCheck(f, errs) {
+function shapeCheck(f, cartridge, errs) {
   const where = f.id || '(missing id)';
   if (!f.id) errs.push(`${where}: missing id`);
   if (!f.quote || typeof f.quote !== 'string') errs.push(`${where}: missing or empty quote`);
@@ -124,7 +124,11 @@ function shapeCheck(f, errs) {
     if (!Array.isArray(f.citations) || f.citations.length === 0) {
       errs.push(`${where}: FAIL finding has no citation - that's an opinion, not a finding (rules.md rule 4)`);
     }
-    if (!f.protectedClass) errs.push(`${where}: FAIL finding must name a protectedClass`);
+    // protectedClass is only required when the cartridge actually declares a class/dimension
+    // layer (Fair Housing does; WCAG doesn't - a criterion isn't "about" a protected class).
+    if (cartridge.classes.length > 0 && !f.protectedClass) {
+      errs.push(`${where}: FAIL finding must name a protectedClass (this cartridge declares classes)`);
+    }
   } else if (f.verdict === 'OUT_OF_SCOPE') {
     if (f.severity !== null && f.severity !== undefined) errs.push(`${where}: OUT_OF_SCOPE finding must have severity null`);
     if (Array.isArray(f.citations) && f.citations.length > 0) {
@@ -164,7 +168,7 @@ function validateAudit(audit, cartridge) {
     return errs;
   }
   for (const f of audit.findings) {
-    shapeCheck(f, errs);
+    shapeCheck(f, cartridge, errs);
     anchorAndVerbatimCheck(f, cartridge, errs);
     phraseSanityCheck(f, cartridge, errs);
   }
