@@ -1,0 +1,13 @@
+{
+  "artifact": "fixture: a PASS on a line that plainly violates - must fail phrase-sanity-check",
+  "findings": [
+    {
+      "id": "fx4",
+      "quote": "No children please - this home is best suited for a mature couple.",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "protectedClass": null,
+      "citations": []
+    }
+  ]
+}

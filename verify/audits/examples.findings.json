@@ -1,0 +1,102 @@
+{
+  "artifact": "examples.md (illustrative snippets, not sample-listing.md)",
+  "findings": [
+    {
+      "id": "ex1-f1",
+      "quote": "in-suite laundry",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "protectedClass": null,
+      "citations": []
+    },
+    {
+      "id": "ex1-f2",
+      "quote": "no children please",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "protectedClass": "familial status",
+      "citations": [
+        {
+          "provision": "100.75c1",
+          "text": "Using words, phrases, photographs, illustrations, symbols or forms which convey that dwellings are available or not available to a particular group of persons because of race, color, religion, sex, handicap, familial status, or national origin."
+        },
+        {
+          "provision": "3604c",
+          "text": "To make, print, or publish, or cause to be made, printed, or published any notice, statement, or advertisement, with respect to the sale or rental of a dwelling that indicates any preference, limitation, or discrimination based on race, color, religion, sex, handicap, familial status, or national origin, or an intention to make any such preference, limitation, or discrimination."
+        }
+      ]
+    },
+    {
+      "id": "ex2-f1",
+      "quote": "cozy bachelor pad feel",
+      "verdict": "FAIL",
+      "severity": "Cautionary",
+      "protectedClass": "sex",
+      "citations": [
+        {
+          "provision": "100.75c1",
+          "text": "Using words, phrases, photographs, illustrations, symbols or forms which convey that dwellings are available or not available to a particular group of persons because of race, color, religion, sex, handicap, familial status, or national origin."
+        }
+      ]
+    },
+    {
+      "id": "ex2-f2",
+      "quote": "no housing vouchers accepted",
+      "verdict": "OUT_OF_SCOPE",
+      "severity": null,
+      "protectedClass": "source of income (not federal)",
+      "citations": [],
+      "note": "Source of income is not a federal protected class; may be a state or local violation this auditor doesn't check."
+    },
+    {
+      "id": "ex3-f1",
+      "quote": "walk to the LRT station",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "protectedClass": null,
+      "citations": []
+    },
+    {
+      "id": "ex3-f2",
+      "quote": "Must be able-bodied to manage the exterior stairs comfortably",
+      "verdict": "FAIL",
+      "severity": "High-risk",
+      "protectedClass": "disability",
+      "citations": [
+        {
+          "provision": "100.75c1",
+          "text": "Using words, phrases, photographs, illustrations, symbols or forms which convey that dwellings are available or not available to a particular group of persons because of race, color, religion, sex, handicap, familial status, or national origin."
+        },
+        {
+          "provision": "3604c",
+          "text": "To make, print, or publish, or cause to be made, printed, or published any notice, statement, or advertisement, with respect to the sale or rental of a dwelling that indicates any preference, limitation, or discrimination based on race, color, religion, sex, handicap, familial status, or national origin, or an intention to make any such preference, limitation, or discrimination."
+        }
+      ]
+    },
+    {
+      "id": "ex4-f1",
+      "quote": "white private home",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "protectedClass": "race/color",
+      "citations": [
+        {
+          "provision": "100.75c1",
+          "text": "Using words, phrases, photographs, illustrations, symbols or forms which convey that dwellings are available or not available to a particular group of persons because of race, color, religion, sex, handicap, familial status, or national origin."
+        },
+        {
+          "provision": "3604c",
+          "text": "To make, print, or publish, or cause to be made, printed, or published any notice, statement, or advertisement, with respect to the sale or rental of a dwelling that indicates any preference, limitation, or discrimination based on race, color, religion, sex, handicap, familial status, or national origin, or an intention to make any such preference, limitation, or discrimination."
+        }
+      ]
+    },
+    {
+      "id": "ex4-f2",
+      "quote": "close to shopping",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "protectedClass": null,
+      "citations": []
+    }
+  ]
+}

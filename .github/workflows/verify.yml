@@ -1,0 +1,26 @@
+name: verify
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Structural + coverage checker (anchor, verbatim, shape, phrase-sanity, class + line coverage)
+        run: node verify/check.mjs
+
+      - name: No accidental real-world PII in the synthetic sample listing
+        run: |
+          if grep -Ein '[0-9]{3}-[0-9]{3}-[0-9]{4}|@gmail\.com|@fifthaveproperties\.com' sample-listing.md; then
+            echo "::error::sample-listing.md should stay fully synthetic, no real contact info"
+            exit 1
+          fi
+          echo "ok: sample-listing.md is clean"

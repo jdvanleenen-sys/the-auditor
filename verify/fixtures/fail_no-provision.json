@@ -1,0 +1,13 @@
+{
+  "artifact": "fixture: a FAIL finding with no citation is an opinion, not a finding - must fail shape-check",
+  "findings": [
+    {
+      "id": "fx3",
+      "quote": "this place just feels off to me",
+      "verdict": "FAIL",
+      "severity": "Cautionary",
+      "protectedClass": "familial status",
+      "citations": []
+    }
+  ]
+}

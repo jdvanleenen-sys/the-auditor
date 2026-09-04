@@ -1,0 +1,15 @@
+{
+  "artifact": "fixture: cites a provision id that doesn't exist in reference/ - must fail anchor-check",
+  "findings": [
+    {
+      "id": "fx1",
+      "quote": "no children please",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "protectedClass": "familial status",
+      "citations": [
+        { "provision": "100.75c9", "text": "This subsection does not exist." }
+      ]
+    }
+  ]
+}

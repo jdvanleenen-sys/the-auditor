@@ -1,0 +1,18 @@
+{
+  "artifact": "fixture: paraphrases a real provision instead of quoting it verbatim - must fail verbatim-check",
+  "findings": [
+    {
+      "id": "fx2",
+      "quote": "no children please",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "protectedClass": "familial status",
+      "citations": [
+        {
+          "provision": "3604c",
+          "text": "To make, print, or publish any notice, statement, or advertisement that shows a bias based on race, color, religion, sex, handicap, familial status, or national origin."
+        }
+      ]
+    }
+  ]
+}
