@@ -70,21 +70,53 @@ function loadFlaggedPhrasesForCartridge(cartridgeDir, phraseFile) {
   return phrases;
 }
 
+// Cartridge integrity: confirm the manifest parses, every file it names actually exists, and its
+// audits folder exists, before trusting any of it. A broken cartridge fails loud with its own id
+// instead of a bare Node stack trace, and doesn't get built into a half-working cartridge object.
+function checkCartridgeIntegrity(dir, manifest) {
+  const errs = [];
+  for (const fname of manifest.standardFiles || []) {
+    if (!existsSync(join(dir, fname))) errs.push(`standardFiles entry "${fname}" does not exist in ${dir}`);
+  }
+  if (manifest.phraseFile && !existsSync(join(dir, manifest.phraseFile))) {
+    errs.push(`phraseFile "${manifest.phraseFile}" does not exist in ${dir}`);
+  }
+  if (manifest.artifact && !existsSync(join(dir, manifest.artifact))) {
+    errs.push(`artifact "${manifest.artifact}" does not exist in ${dir}`);
+  }
+  const auditsDir = join(root, 'verify', 'audits', manifest.id || '');
+  if (!existsSync(auditsDir)) errs.push(`verify/audits/${manifest.id}/ does not exist`);
+  return errs;
+}
+
 function loadCartridges() {
   const referenceDir = join(root, 'reference');
   const cartridges = [];
+  const integrityErrors = []; // [{ id, errors }] - broken cartridges, reported but not built
   for (const entry of readdirSync(referenceDir)) {
     const dir = join(referenceDir, entry);
     if (!statSync(dir).isDirectory()) continue;
     const manifestPath = join(dir, 'cartridge.json');
     if (!existsSync(manifestPath)) continue;
-    const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+
+    let manifest;
+    try {
+      manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+    } catch (e) {
+      integrityErrors.push({ id: entry, errors: [`cartridge.json failed to parse: ${e.message}`] });
+      continue;
+    }
+
+    const structuralErrs = checkCartridgeIntegrity(dir, manifest);
+    if (structuralErrs.length) {
+      integrityErrors.push({ id: manifest.id || entry, errors: structuralErrs });
+      continue; // don't try to build anchors etc. from a cartridge that's already known-broken
+    }
+
     const auditsDir = join(root, 'verify', 'audits', manifest.id);
-    const audits = existsSync(auditsDir)
-      ? readdirSync(auditsDir)
-          .filter((f) => f.endsWith('.findings.json'))
-          .map((f) => ({ file: f, ...JSON.parse(readFileSync(join(auditsDir, f), 'utf8')) }))
-      : [];
+    const audits = readdirSync(auditsDir)
+      .filter((f) => f.endsWith('.findings.json'))
+      .map((f) => ({ file: f, ...JSON.parse(readFileSync(join(auditsDir, f), 'utf8')) }));
     cartridges.push({
       id: manifest.id,
       name: manifest.name,
@@ -102,7 +134,7 @@ function loadCartridges() {
       audits,
     });
   }
-  return cartridges;
+  return { cartridges, integrityErrors };
 }
 
 // ---------- audit JSON validation ----------
@@ -223,7 +255,7 @@ function findCartridgeForFile(cartridges, filePath) {
 }
 
 function main() {
-  const cartridges = loadCartridges();
+  const { cartridges, integrityErrors } = loadCartridges();
   const fileArgIdx = process.argv.indexOf('--file');
 
   if (fileArgIdx !== -1) {
@@ -244,6 +276,12 @@ function main() {
   }
 
   let failed = false;
+
+  for (const ie of integrityErrors) {
+    failed = true;
+    console.error(`FAIL [${ie.id}]: cartridge integrity`);
+    for (const e of ie.errors) console.error(`  - ${e}`);
+  }
 
   for (const cartridge of cartridges) {
     console.log(`--- cartridge: ${cartridge.id} (${cartridge.name}) ---`);
@@ -299,6 +337,18 @@ function main() {
     } else {
       console.log(`ok (failed as required): verify/fixtures/${f}`);
     }
+  }
+
+  // Cartridge-integrity fixture: a manifest pointing at files that don't exist, checked in isolation
+  // (not under reference/, so it never touches the real cartridge scan above).
+  const brokenDir = join(root, 'verify', 'fixtures', 'broken-cartridge');
+  const brokenManifest = JSON.parse(readFileSync(join(brokenDir, 'cartridge.json'), 'utf8'));
+  const brokenErrs = checkCartridgeIntegrity(brokenDir, brokenManifest);
+  if (brokenErrs.length === 0) {
+    failed = true;
+    console.error('FAIL: verify/fixtures/broken-cartridge was supposed to fail cartridge-integrity but passed - the gate is dead');
+  } else {
+    console.log('ok (failed as required): verify/fixtures/broken-cartridge (cartridge integrity)');
   }
 
   if (failed) process.exit(1);

@@ -24,7 +24,7 @@ A finding has exactly four parts. Missing any one of them means it is not a find
   - **High-risk** — not a textbook example, but a reasonable reader would understand it as indicating a preference. Needs the phrase-guidance table or a documented judgment call to explain why.
   - **Cautionary** — a phrase that is contested or context-dependent (see `phrase-guidance.md`'s "bachelor pad" entry for the model). Flag it, explain the ambiguity, do not call it a Violation.
   - **Pass** — the severity a PASS finding carries. (Pass/fail and severity are reported together; a PASS line still gets a severity field so the report shape stays uniform. See `examples.md`.)
-- **Citation.** The provision id (`3604c`, `100.75`, or `100.75c1` through `100.75c4` for a specific example) and the verbatim text of that provision or sub-clause, copied exactly from `reference/`. If the finding also leans on `phrase-guidance.md`, cite that too, but never *instead of* a binding provision. See rule 4.
+- **Citation.** The provision id from the active cartridge (for example `3604c` or `100.75c1` in the Fair Housing cartridge, `wcag-1.4.3` in the WCAG cartridge) and the verbatim text of that provision, copied exactly from the cartridge's `reference/` files. If the cartridge has a phrase-guidance file and the finding leans on it, cite that too, but never *instead of* a binding provision. See rule 4.
 
 ## 3. Report PASS and FAIL, not just FAIL
 
@@ -50,7 +50,7 @@ A phrase on the guidance list ("walk to schools," for example, is explicitly *no
 
 ## 7. Verbatim, always
 
-Any time you quote `reference/` in a finding, the words have to match the file byte for byte. `verify/check.mjs` enforces this: it re-reads the cited provision from `reference/` and fails the finding if your quoted text doesn't match. Paraphrasing "indicates a preference" as "shows a bias" is a verbatim-check failure, not a stylistic choice.
+Any time you quote the active cartridge's `reference/` files in a finding, the words have to match the file byte for byte. `verify/check.mjs` enforces this: it re-reads the cited provision from `reference/` and fails the finding if your quoted text doesn't match. Paraphrasing "indicates a preference" as "shows a bias" is a verbatim-check failure, not a stylistic choice.
 
 ## Refusal
 

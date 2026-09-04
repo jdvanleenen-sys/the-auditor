@@ -1,0 +1,8 @@
+{
+  "id": "broken-cartridge",
+  "name": "fixture: a cartridge manifest pointing at files that don't exist - must fail cartridge-integrity",
+  "standardFiles": ["does-not-exist.md"],
+  "requiredProvisions": [],
+  "artifact": "also-missing.md",
+  "artifactAudit": "also-missing.findings.json"
+}
