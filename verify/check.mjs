@@ -90,8 +90,10 @@ function loadCartridges() {
       name: manifest.name,
       dir,
       anchors: loadAnchorsForCartridge(dir, manifest.standardFiles),
-      flaggedPhrases: loadFlaggedPhrasesForCartridge(dir, manifest.phraseFile),
-      classes: manifest.classes,
+      // phraseFile and classes are optional in the manifest - a cartridge with no informal-phrase
+      // layer or no protected-class-style dimension (WCAG, for instance) just skips those checks.
+      flaggedPhrases: manifest.phraseFile ? loadFlaggedPhrasesForCartridge(dir, manifest.phraseFile) : [],
+      classes: manifest.classes || [],
       generalOnlyIds: new Set(manifest.generalOnlyIds || []),
       requiredProvisions: manifest.requiredProvisions || [],
       artifactPath: join(dir, manifest.artifact),
@@ -252,12 +254,16 @@ function main() {
       }
     }
 
-    const missingClasses = classCoverage(cartridge);
-    if (missingClasses.length) {
-      failed = true;
-      console.error(`FAIL [${cartridge.id}]: class coverage - never exercised: ${missingClasses.join(', ')}`);
+    if (cartridge.classes.length === 0) {
+      console.log(`skip [${cartridge.id}]: no classes/dimension declared for this cartridge`);
     } else {
-      console.log(`ok [${cartridge.id}]: all classes exercised across its audits`);
+      const missingClasses = classCoverage(cartridge);
+      if (missingClasses.length) {
+        failed = true;
+        console.error(`FAIL [${cartridge.id}]: class coverage - never exercised: ${missingClasses.join(', ')}`);
+      } else {
+        console.log(`ok [${cartridge.id}]: all classes exercised across its audits`);
+      }
     }
 
     const missingProvisions = provisionCoverage(cartridge);
