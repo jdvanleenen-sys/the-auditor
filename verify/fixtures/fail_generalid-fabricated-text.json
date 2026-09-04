@@ -1,0 +1,18 @@
+{
+  "artifact": "fixture: a citation to a general id (100.75, no single verbatim span) whose claimed text is fabricated, matching nothing in reference/ - must fail anchor/verbatim-check",
+  "findings": [
+    {
+      "id": "fx9",
+      "quote": "no children please",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "protectedClass": "familial status",
+      "citations": [
+        {
+          "provision": "100.75",
+          "text": "This is completely fabricated text that does not appear anywhere in the real regulation, invented to see if the general-id exemption lets it through unchecked."
+        }
+      ]
+    }
+  ]
+}

@@ -18,7 +18,7 @@ Do not read the artifact first. Read the standard first, every time. An auditor 
 A finding has exactly four parts. Missing any one of them means it is not a finding — it's a comment, and comments don't go in the report.
 
 - **Located quote.** The exact phrase from the artifact, quoted verbatim, with enough surrounding text that a reader can find it (a line number or section name if the artifact has them).
-- **Verdict.** `PASS` or `FAIL`. No "maybe," no "possibly." If you are genuinely unsure whether a phrase indicates a preference, say so in the finding's note, but still commit to PASS or FAIL — the severity scale (below) is where uncertainty and degree actually live.
+- **Verdict.** `PASS`, `FAIL`, or `Out of scope` (rule 5 covers when the third one applies). No "maybe," no "possibly," between PASS and FAIL. If you are genuinely unsure whether a phrase indicates a preference, say so in the finding's note, but still commit to PASS or FAIL — the severity scale (below) is where uncertainty and degree actually live. `Out of scope` is not a hedge between PASS and FAIL; it means the line isn't something 3604c/100.75 reach at all, for one of the two reasons rule 5 names.
 - **Severity.** One of:
   - **Violation** — squarely matches language 100.75(c) gives as an example, or plainly indicates a preference/limitation/discrimination on its face. No real ambiguity.
   - **High-risk** — not a textbook example, but a reasonable reader would understand it as indicating a preference. Needs the phrase-guidance table or a documented judgment call to explain why.
@@ -36,9 +36,14 @@ If you can't name the exact 3604c or 100.75 language a phrase indicates a violat
 
 The mirror image: don't invent a citation to force a finding. If the phrase list doesn't cover something and you can't connect it to the statute's own language ("indicates a preference, limitation, or discrimination... or an intention to make" one), it does not belong in the report, no matter how the phrasing reads to you personally.
 
-## 5. State-or-local-only protected classes are out of scope, not violations
+## 5. Out of scope covers two different situations — name which one
 
-If a line discriminates on a basis the federal seven don't cover (source of income, sexual orientation, gender identity, age, marital status, military status), write a finding labeled **Out of scope** — not PASS, not FAIL — that says plainly this auditor only checks the federal Fair Housing Act's seven classes and this line may still violate state or local law. Do not cite [[3604c]] or [[100.75]] for it; they don't reach it.
+Write a finding labeled **Out of scope** — not PASS, not FAIL — in either of these cases. Both mean 3604c/100.75 don't reach the line; they don't mean the line is fine.
+
+- **State-or-local-only protected classes.** The line discriminates on a basis the federal seven don't cover (source of income, sexual orientation, gender identity, age, marital status, military status). Say plainly this auditor only checks the federal Fair Housing Act's seven classes and this line may still violate state or local law.
+- **Not advertising copy.** The line is a screening criterion, income/employment requirement, lease term, or other non-advertising content sitting inside an otherwise-advertising artifact (an income multiplier, "no self-employed applicants," a credit-score cutoff). `identity.md`'s "What you check" section and the Refusal section below cover declining a whole artifact that's screening policy, not advertising; this is the same rule applied to a single line mixed into an ad instead of a whole document. Say plainly this is a screening/qualification criterion, not advertising language, and this auditor's charter doesn't reach it — a disparate-impact analysis of screening criteria is a different part of the Fair Housing Act.
+
+Either way: do not cite [[3604c]] or [[100.75]] for it; they don't reach it. Name which of the two situations applies in the finding's note — "out of scope: state/local class" and "out of scope: not advertising copy" are different findings for different reasons, even though they get the same verdict.
 
 ## 6. Context can clear a phrase, and context can convict one
 

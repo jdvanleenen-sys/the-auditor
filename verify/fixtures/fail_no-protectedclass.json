@@ -1,0 +1,17 @@
+{
+  "artifact": "fixture: a FAIL with a real citation but no protectedClass - must fail shape-check",
+  "findings": [
+    {
+      "id": "fx6",
+      "quote": "no children please",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "3604c",
+          "text": "To make, print, or publish, or cause to be made, printed, or published any notice, statement, or advertisement, with respect to the sale or rental of a dwelling that indicates any preference, limitation, or discrimination based on race, color, religion, sex, handicap, familial status, or national origin, or an intention to make any such preference, limitation, or discrimination."
+        }
+      ]
+    }
+  ]
+}

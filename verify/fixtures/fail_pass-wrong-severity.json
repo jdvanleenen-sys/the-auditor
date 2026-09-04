@@ -1,0 +1,13 @@
+{
+  "artifact": "fixture: a PASS finding with a non-Pass severity - must fail shape-check",
+  "findings": [
+    {
+      "id": "fx8",
+      "quote": "walk-in closets",
+      "verdict": "PASS",
+      "severity": "Cautionary",
+      "protectedClass": null,
+      "citations": []
+    }
+  ]
+}

@@ -32,7 +32,7 @@
 //   7. artifact coverage   - every numbered line in the cartridge's artifact has a matching finding
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { dirname, join, relative } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
@@ -69,7 +69,12 @@ function loadFlaggedPhrasesForCartridge(cartridgeDir, phraseFile) {
   for (const line of scoped.split('\n')) {
     if (!line.trim().startsWith('|')) continue;
     if (/^\|\s*Phrase\s*\|/i.test(line) || /^\|\s*-+\s*\|/.test(line)) continue; // header/separator rows
-    for (const m of line.matchAll(/"([^"]+)"/g)) phrases.push(m[1].toLowerCase());
+    // Only the first cell (the Phrase column) is the flagged-phrase list. Quoted strings anywhere
+    // else in the row (a source's article title, a quote inside a "why it's flagged" note) are NOT
+    // flagged phrases - extracting from the whole line was pulling those in too (found during the
+    // repair-loop pass; see verify/fixtures/fail_source-title-not-a-phrase.json).
+    const firstCell = line.split('|')[1] || '';
+    for (const m of firstCell.matchAll(/"([^"]+)"/g)) phrases.push(m[1].toLowerCase());
   }
   return phrases;
 }
@@ -173,18 +178,39 @@ function shapeCheck(f, cartridge, errs) {
   }
 }
 
+// Display-only path for error messages - the real check logic never uses this, only humans reading
+// the output do. Uses the cartridge's actual resolved folder, not an assumed "reference/" prefix,
+// so an error under --root framework-proof (or any other root) points at the real location.
+function displayDir(dir) {
+  return relative(root, dir).replace(/\\/g, '/') + '/';
+}
+
 function anchorAndVerbatimCheck(f, cartridge, errs) {
   const where = f.id || '(missing id)';
   for (const c of f.citations || []) {
     if (!c.provision || (!cartridge.anchors.has(c.provision) && !cartridge.generalOnlyIds.has(c.provision))) {
-      errs.push(`${where}: citation provision "${c.provision}" is not in reference/${cartridge.id}/`);
+      errs.push(`${where}: citation provision "${c.provision}" is not in ${displayDir(cartridge.dir)}`);
       continue;
     }
-    if (cartridge.generalOnlyIds.has(c.provision)) continue; // no single span to verbatim-check
+    if (cartridge.generalOnlyIds.has(c.provision)) {
+      // A general id (e.g. "100.75" meaning "this regulation generally") has no single span to
+      // verbatim-check against. That doesn't mean its claimed text gets a free pass, though - it
+      // still has to actually appear in the cartridge's real reference text, or it's fabricated.
+      const claimed = normalize(c.text || '');
+      if (claimed) {
+        const matchesSomething = [...cartridge.anchors.values()].some(
+          (truth) => truth.includes(claimed) || claimed.includes(truth)
+        );
+        if (!matchesSomething) {
+          errs.push(`${where}: citation "${c.provision}" (a general id) has text that doesn't match anything in ${displayDir(cartridge.dir)} - looks fabricated\n    claimed: ${claimed}`);
+        }
+      }
+      continue;
+    }
     const truth = cartridge.anchors.get(c.provision);
     const claimed = normalize(c.text || '');
     if (claimed !== truth) {
-      errs.push(`${where}: citation "${c.provision}" does not match reference/${cartridge.id}/ verbatim\n    claimed: ${claimed}\n    actual:  ${truth}`);
+      errs.push(`${where}: citation "${c.provision}" does not match ${displayDir(cartridge.dir)} verbatim\n    claimed: ${claimed}\n    actual:  ${truth}`);
     }
   }
 }
@@ -313,20 +339,32 @@ function main() {
       }
     }
 
-    const missingProvisions = provisionCoverage(cartridge);
-    if (missingProvisions.length) {
-      failed = true;
-      console.error(`FAIL [${cartridge.id}]: provision coverage - never cited: ${missingProvisions.join('; ')}`);
+    if (cartridge.requiredProvisions.length === 0) {
+      console.log(`skip [${cartridge.id}]: manifest declares no requiredProvisions - nothing to check coverage against`);
     } else {
-      console.log(`ok [${cartridge.id}]: every required provision group is cited`);
+      const missingProvisions = provisionCoverage(cartridge);
+      if (missingProvisions.length) {
+        failed = true;
+        console.error(`FAIL [${cartridge.id}]: provision coverage - never cited: ${missingProvisions.join('; ')}`);
+      } else {
+        console.log(`ok [${cartridge.id}]: every required provision group is cited`);
+      }
     }
 
-    const missingLines = artifactLineCoverage(cartridge);
-    if (missingLines.length) {
+    const artifactLineIds = existsSync(cartridge.artifactPath)
+      ? [...readFileSync(cartridge.artifactPath, 'utf8').matchAll(/\*\*(L\d+)\.\*\*/g)].map((m) => m[1])
+      : [];
+    if (artifactLineIds.length === 0) {
       failed = true;
-      console.error(`FAIL [${cartridge.id}]: artifact lines never audited: ${missingLines.join(', ')}`);
+      console.error(`FAIL [${cartridge.id}]: artifact has zero "**Lx.**" numbered lines - either it's missing or doesn't follow the numbering convention this checker relies on (see README.md's "how to add a standard"), so line coverage can't be verified at all`);
     } else {
-      console.log(`ok [${cartridge.id}]: every artifact line has a finding`);
+      const missingLines = artifactLineCoverage(cartridge);
+      if (missingLines.length) {
+        failed = true;
+        console.error(`FAIL [${cartridge.id}]: artifact lines never audited: ${missingLines.join(', ')}`);
+      } else {
+        console.log(`ok [${cartridge.id}]: every artifact line has a finding`);
+      }
     }
   }
 
@@ -362,6 +400,20 @@ function main() {
     console.error('FAIL: verify/fixtures/broken-cartridge was supposed to fail cartridge-integrity but passed - the gate is dead');
   } else {
     console.log('ok (failed as required): verify/fixtures/broken-cartridge (cartridge integrity)');
+  }
+
+  // Regression guard (repair-loop pass 1): loadFlaggedPhrasesForCartridge must read quoted text
+  // from the Phrase column only. It used to scan the whole table row, which silently pulled in
+  // article titles and note-asides from the Source/Why columns as if they were flagged phrases.
+  const phraseFixtureDir = join(root, 'verify', 'fixtures', 'phrase-parsing');
+  const extractedPhrases = loadFlaggedPhrasesForCartridge(phraseFixtureDir, 'guidance.md');
+  const leaked = extractedPhrases.includes('this title should not be flagged') || extractedPhrases.includes('not a real phrase either');
+  const gotReal = extractedPhrases.includes('flagged term');
+  if (leaked || !gotReal) {
+    failed = true;
+    console.error(`FAIL: phrase-guidance column-scoping regression - extracted ${JSON.stringify(extractedPhrases)}, expected exactly ["flagged term"]`);
+  } else {
+    console.log('ok (regression guard): phrase-guidance parser reads the Phrase column only');
   }
 
   if (failed) process.exit(1);
