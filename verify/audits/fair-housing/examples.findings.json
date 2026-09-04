@@ -97,6 +97,23 @@
       "severity": "Pass",
       "protectedClass": null,
       "citations": []
+    },
+    {
+      "id": "ex5-f1",
+      "quote": "traditional household preferred",
+      "verdict": "FAIL",
+      "severity": "High-risk",
+      "protectedClass": "familial status",
+      "citations": [
+        {
+          "provision": "100.75c1",
+          "text": "Using words, phrases, photographs, illustrations, symbols or forms which convey that dwellings are available or not available to a particular group of persons because of race, color, religion, sex, handicap, familial status, or national origin."
+        },
+        {
+          "provision": "3604c",
+          "text": "To make, print, or publish, or cause to be made, printed, or published any notice, statement, or advertisement, with respect to the sale or rental of a dwelling that indicates any preference, limitation, or discrimination based on race, color, religion, sex, handicap, familial status, or national origin, or an intention to make any such preference, limitation, or discrimination."
+        }
+      ]
     }
   ]
 }

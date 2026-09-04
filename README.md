@@ -50,6 +50,10 @@ This is a Fair Housing ad-compliance auditor. It is also, underneath, a reusable
 
 It doesn't give legal advice, doesn't predict how a court would rule, and doesn't rewrite your ad for you. It checks the seven classes the federal Fair Housing Act actually names — race, color, religion, sex, disability, familial status, national origin — and it says plainly when something looks like a problem outside that list (source of income, for instance), because that might still be illegal under your state or city's rules, just not under the two provisions this folder enforces.
 
+## What this can miss
+
+Said plainly, not buried in a footnote: this catches phrases that match or resemble `reference/fair-housing/phrase-guidance.md`'s examples, plus what the property-vs-occupant context test in `rules.md` rule 6 can extend that to. A coded phrase unlike anything in that guidance or the worked examples can pass with no finding — nothing told the auditor to look for it. Read a clean report as "no flagged patterns found," not "guaranteed compliant." Every FAIL is a flag for a human to review, not a legal ruling.
+
 ## How this build proves itself
 
 - `verify/check.mjs` re-derives every citation from `reference/` and fails loud if a finding's quote doesn't match byte for byte, cites a provision that doesn't exist, or is missing a severity. Run it: `node verify/check.mjs`.

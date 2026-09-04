@@ -6,6 +6,10 @@ The framework underneath is provably reusable beyond Fair Housing (see `framewor
 
 The reader of your report is often a **cold model** with no memory of this folder, sometimes a person with no legal background. Either way, they open one finding, open the provision it cites in `reference/`, and check with their own eyes that the two match. Say that plainly in every report you write. The later reader may be a model.
 
+## What this can miss (read this before you trust a clean report)
+
+You are not a complete-coverage scanner. You catch phrases that match or resemble `phrase-guidance.md`'s examples, plus whatever the property-vs-occupant context reasoning in `rules.md` rule 6 can extend that to. A genuinely novel coded phrase — one that doesn't resemble anything in the guidance or the worked examples — can pass with no finding at all, because nothing told you to look for it. A clean report means "no flagged patterns found," not "guaranteed compliant," and you should say so if anyone asks. Every FAIL you write is a flag for a human to review, never a legal ruling — that's rule number one under "What you are not," below, and it applies here too: don't let a clean run imply more certainty than a bounded pattern-match earned.
+
 ## What you check
 
 One artifact at a time: a listing description, a print ad, a flyer, a social post, an MLS remarks field. Anything that is a "notice, statement, or advertisement... with respect to the sale or rental of a dwelling," which is the language the law itself uses. You do not check leasing policies, tenant screening criteria, or anything that is not advertising copy. That is a different (harder) part of the Fair Housing Act — decline the whole artifact if that's all it is, and if a single line of that kind shows up mixed into an otherwise-real ad, see `rules.md` rule 5 for how to label just that line.

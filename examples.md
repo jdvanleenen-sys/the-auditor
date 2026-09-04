@@ -1,6 +1,6 @@
 # Worked examples
 
-Four short Fair Housing audits, the standard this auditor ships, plus one from `framework-proof/` (WCAG) showing the same report shape holds on a completely different standard. Each shows the shape from `rules.md`: located quote, verdict, severity, citation. The Fair Housing snippets are illustrative only, written separately from `reference/fair-housing/sample-listing.md` (the artifact this build's tests audit) so reading this file doesn't hand you the answer to that audit.
+Five short Fair Housing audits, the standard this auditor ships, plus one from `framework-proof/` (WCAG) showing the same report shape holds on a completely different standard. Each shows the shape from `rules.md`: located quote, verdict, severity, citation. The Fair Housing snippets are illustrative only, written separately from `reference/fair-housing/sample-listing.md` (the artifact this build's tests audit) so reading this file doesn't hand you the answer to that audit.
 
 ## Example 1 — a familial-status FAIL next to a clean PASS
 
@@ -68,7 +68,18 @@ Four short Fair Housing audits, the standard this auditor ships, plus one from `
 
 This example exists so `verify/check.mjs` can confirm every one of the seven protected classes in `reference/fair-housing/protected-classes.md` is exercised somewhere across `examples.md` and `reference/fair-housing/sample-listing.md`'s audit — `reference/fair-housing/sample-listing.md` itself never needed a race/color line to stay a realistic single listing, so the class gets its worked example here instead.
 
-## Example 5 — proof the framework travels, not a second standard
+## Example 5 — applying the Violation vs. High-risk tier test to a new phrase
+
+**Artifact snippet:** *"Quiet building, traditional household preferred — great for anyone who values a settled community."*
+
+**Finding**
+- Located quote: "traditional household preferred"
+- Verdict: FAIL
+- Severity: High-risk
+- Citation: `100.75c1` — "Using words, phrases, photographs, illustrations, symbols or forms which convey that dwellings are available or not available to a particular group of persons because of race, color, religion, sex, handicap, familial status, or national origin." Also `3604c`.
+- Note: This isn't one of the three phrases `rules.md` rule 2's tier test names ("no children," "must be able-bodied," "bachelor pad") — it's a fourth, to show the test applied cold. Run the test: is the preference on its face, zero inference? No — "traditional household" doesn't name a class or an occupant trait the way "no children" does; a reader has to take one inferential step, recognizing "traditional household" as familiar euphemistic shorthand (widely documented in fair-housing training material as a stand-in for "no unmarried couples" or "no families with children") rather than a literal description of decor or lifestyle. That one inferential step is exactly rule 2's line between Violation and High-risk: on-its-face gets Violation, one inference gets High-risk. It's not Cautionary either — this isn't a case where reasonable readers disagree it's a preference at all (contrast "bachelor pad," which has a real contested history); the disagreement here, if any, is only about which class it targets, not whether it targets one. Familial status is the class named in the citation because "traditional household" is most commonly documented as a marital-status/family-composition proxy, not because the phrase couldn't also read as age-coded — the auditor names the class the sourced pattern actually points to, not every class a suspicious reader might guess at.
+
+## Example 6 — proof the framework travels, not a second standard
 
 This auditor ships one standard: Fair Housing, in `reference/`. `framework-proof/wcag/` is not a second thing it checks day to day — it's a working cartridge kept outside `reference/` to prove the checker isn't written for Fair Housing specifically. Same `cartridge.json` shape, same anchor format, same `verify/check.mjs`, run against a different root: `node verify/check.mjs --root framework-proof`. See `framework-proof/README.md`.
 

@@ -1,0 +1,13 @@
+{
+  "artifact": "fixture: an OUT_OF_SCOPE finding with no note explaining why - must fail shape-check",
+  "findings": [
+    {
+      "id": "fx11",
+      "quote": "Section 8 vouchers not accepted.",
+      "verdict": "OUT_OF_SCOPE",
+      "severity": null,
+      "protectedClass": "source of income (not federal)",
+      "citations": []
+    }
+  ]
+}
