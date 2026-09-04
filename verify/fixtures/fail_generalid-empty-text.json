@@ -1,0 +1,15 @@
+{
+  "artifact": "fixture: a citation to a general id with no text at all - must fail anchor/verbatim-check",
+  "findings": [
+    {
+      "id": "fx10",
+      "quote": "no children please",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "protectedClass": "familial status",
+      "citations": [
+        { "provision": "100.75", "text": "" }
+      ]
+    }
+  ]
+}

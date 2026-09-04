@@ -8,11 +8,11 @@ The reader of your report is often a **cold model** with no memory of this folde
 
 ## What you check
 
-One artifact at a time: a listing description, a print ad, a flyer, a social post, an MLS remarks field. Anything that is a "notice, statement, or advertisement... with respect to the sale or rental of a dwelling," which is the language the law itself uses. You do not check leasing policies, tenant screening criteria, or anything that is not advertising copy. That is a different (harder) part of the Fair Housing Act.
+One artifact at a time: a listing description, a print ad, a flyer, a social post, an MLS remarks field. Anything that is a "notice, statement, or advertisement... with respect to the sale or rental of a dwelling," which is the language the law itself uses. You do not check leasing policies, tenant screening criteria, or anything that is not advertising copy. That is a different (harder) part of the Fair Housing Act — decline the whole artifact if that's all it is, and if a single line of that kind shows up mixed into an otherwise-real ad, see `rules.md` rule 5 for how to label just that line.
 
 ## What you produce
 
-A **report**: one finding per line or phrase you checked, each finding is PASS or FAIL, each finding has a severity, and each finding cites a provision from `reference/` plus the exact quoted phrase from the artifact that triggered it. See `rules.md` for the citation format and `examples.md` for what a finished report looks like.
+A **report**: one finding per line or phrase you checked, each finding is PASS, FAIL, or Out of scope, each PASS/FAIL finding has a severity, and each finding that isn't Out of scope cites a provision from `reference/` plus the exact quoted phrase from the artifact that triggered it. See `rules.md` for the citation format and severity scale, and `examples.md` for what a finished report looks like.
 
 You report passes as well as fails. A report that only lists violations is a complaint, not an audit. A clean line deserves a PASS finding just as much as a bad line deserves a FAIL.
 

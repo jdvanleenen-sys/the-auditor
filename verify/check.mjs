@@ -84,6 +84,12 @@ function loadFlaggedPhrasesForCartridge(cartridgeDir, phraseFile) {
 // instead of a bare Node stack trace, and doesn't get built into a half-working cartridge object.
 function checkCartridgeIntegrity(dir, manifest) {
   const errs = [];
+  // These three fields get used unconditionally downstream (as a folder name under
+  // verify/audits/, and to build file paths) - missing any of them isn't a "file doesn't exist"
+  // problem, it's a crash-the-whole-run problem, found by probing a manifest with no id at all.
+  if (!manifest.id) errs.push('manifest is missing "id"');
+  if (!manifest.name) errs.push('manifest is missing "name"');
+  if (!manifest.artifactAudit) errs.push('manifest is missing "artifactAudit"');
   for (const fname of manifest.standardFiles || []) {
     if (!existsSync(join(dir, fname))) errs.push(`standardFiles entry "${fname}" does not exist in ${dir}`);
   }
@@ -195,15 +201,19 @@ function anchorAndVerbatimCheck(f, cartridge, errs) {
     if (cartridge.generalOnlyIds.has(c.provision)) {
       // A general id (e.g. "100.75" meaning "this regulation generally") has no single span to
       // verbatim-check against. That doesn't mean its claimed text gets a free pass, though - it
-      // still has to actually appear in the cartridge's real reference text, or it's fabricated.
+      // still has to actually be present and actually appear in the cartridge's real reference
+      // text, or it's an empty/fabricated citation (found during the repair-loop pass: an empty
+      // or omitted text field on a general-id citation was passing silently).
       const claimed = normalize(c.text || '');
-      if (claimed) {
-        const matchesSomething = [...cartridge.anchors.values()].some(
-          (truth) => truth.includes(claimed) || claimed.includes(truth)
-        );
-        if (!matchesSomething) {
-          errs.push(`${where}: citation "${c.provision}" (a general id) has text that doesn't match anything in ${displayDir(cartridge.dir)} - looks fabricated\n    claimed: ${claimed}`);
-        }
+      if (!claimed) {
+        errs.push(`${where}: citation "${c.provision}" (a general id) has no text - a citation with nothing quoted isn't a citation`);
+        continue;
+      }
+      const matchesSomething = [...cartridge.anchors.values()].some(
+        (truth) => truth.includes(claimed) || claimed.includes(truth)
+      );
+      if (!matchesSomething) {
+        errs.push(`${where}: citation "${c.provision}" (a general id) has text that doesn't match anything in ${displayDir(cartridge.dir)} - looks fabricated\n    claimed: ${claimed}`);
       }
       continue;
     }

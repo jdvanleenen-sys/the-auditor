@@ -8,7 +8,7 @@ Run these in order. You don't write a finding until you've read the standard.
 2. `reference/fair-housing/protected-classes.md` — the seven classes you check against, and nothing else.
 3. `reference/fair-housing/42-usc-3604c.md` and `reference/fair-housing/24-cfr-100.75.md` — the two binding provisions, in full. Do not skip the accuracy note in `24-cfr-100.75.md` about the withdrawn Part 109 word list.
 4. `reference/fair-housing/phrase-guidance.md` — sourced examples, useful for pattern recognition, never binding on their own.
-5. `examples.md` — two or three worked audits, so you see the report shape before you write one.
+5. `examples.md` — worked examples, so you see the report shape before you write one.
 6. The artifact you were handed.
 
 Do not read the artifact first. Read the standard first, every time. An auditor who skims the ad and then goes looking for provisions to justify a gut reaction has the process backwards, and it shows in sloppy citations.
@@ -52,6 +52,14 @@ A phrase on the guidance list ("walk to schools," for example, is explicitly *no
 - "Walk-in closets" and "walk to schools" describe the property. Not flagged, ever, on their own.
 - "Must be able-bodied to enjoy the walk to the park" changes the subject from the property to the occupant's body. That's a different sentence doing a different thing, and it gets flagged even though "walk to the park" alone would not be.
 - A phrase like "bachelor pad" sitting alone in a features list ("cozy bachelor pad, one bedroom") is Cautionary at most. The same phrase paired with "perfect for a single guy" compounds toward High-risk or Violation, because now two clauses are doing the same coded work together. Cite both clauses in one finding when they work together; don't split them into two weaker findings. Compounding only happens when the second clause codes the *same* protected class as the first. A neutral, non-class modifier next to a contested phrase ("bachelor pad for a young professional") doesn't compound it — "young professional" isn't sex- or marital-status-coded, it's ordinary rental marketing language, and rule 4 already bars inventing a finding (like an age angle) that isn't tied to a citation or a `phrase-guidance.md` pattern. When in doubt, ask whether the second clause names or implies membership in one of the seven classes in `reference/fair-housing/protected-classes.md`. If it doesn't, it's not compounding, whatever else it might be doing rhetorically.
+
+## 6b. Two classes in one clause is one finding naming both, not a pick or a split
+
+"Perfect for a devout Filipino Catholic family" hits religion ("Catholic") and national origin ("Filipino") in the same clause, neither doing double duty for the other. Don't pick the more obvious one and drop the rest, and don't split it into two findings over the same words. One finding, both classes named in `protectedClass`, both classes' citations included (usually the same `100.75c1`/`3604c` pair applies to both, since the provision text itself lists all seven classes together). This is different from rule 6's compounding rule, which is about two *clauses* reinforcing the *same* class — this is one clause hitting two *different* classes at once.
+
+## 6c. "Prefer" is not a softer version of "require"
+
+3604c's own text lists "any preference, limitation, or discrimination" as three independently sufficient triggers — preference isn't a weaker cousin of a hard requirement, it's a separate, equally-binding one. "Prefer tenants fluent in English, though not required" still indicates a preference tied to national origin; the hedge doesn't move it out of 3604c's reach, even though it might read as softer or more defensible to whoever wrote it. Don't let a finding's severity drop just because the ad says "preferred" instead of "required" — score it on whether a preference is indicated, not on how enforceable the advertiser made it sound.
 
 ## 7. Verbatim, always
 

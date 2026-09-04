@@ -22,9 +22,9 @@ flowchart LR
 1. Drop `identity.md`, `rules.md`, `examples.md`, `reference/`, and this README into a Claude project (or point Claude Code at this folder).
 2. Give it a listing description, print ad, flyer, or MLS remarks field. Advertising copy only — not a lease, not a screening policy.
 3. Read `identity.md` and `rules.md` first so you know the report shape it's going to produce. Then hand over the artifact.
-4. You get back one finding per line: a located quote, PASS or FAIL, a severity (Pass / Violation / High-risk / Cautionary / Out of scope), and the exact provision text it's citing.
+4. You get back one finding per line: a located quote, a verdict (`PASS`, `FAIL`, or `Out of scope`), and for PASS/FAIL a severity (`Pass` / `Violation` / `High-risk` / `Cautionary` — an `Out of scope` finding carries no severity, just a note explaining why), plus the exact provision text it's citing.
 
-See `examples.md` for three worked audits before you run your first real one. `reference/fair-housing/sample-listing.md` is the synthetic listing this build's own tests run against — audit it yourself and compare your findings to `verify/audits/fair-housing/sample-listing.findings.json` if you want to sanity-check the auditor before trusting it on something real.
+See `examples.md` for five worked examples before you run your first real audit. `reference/fair-housing/sample-listing.md` is the synthetic listing this build's own tests run against — audit it yourself and compare your findings to `verify/audits/fair-housing/sample-listing.findings.json` if you want to sanity-check the auditor before trusting it on something real.
 
 ## Built on a reusable framework
 
