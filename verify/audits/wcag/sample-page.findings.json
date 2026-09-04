@@ -1,0 +1,89 @@
+{
+  "artifact": "sample-page.md",
+  "findings": [
+    {
+      "id": "L1",
+      "quote": "<img src=\"hero.jpg\"> - the page's main hero photo of the property, no alt attribute at all.",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "wcag-1.1.1",
+          "text": "All non-text content that is presented to the user has a text alternative that serves the equivalent purpose, except for the situations listed below. Controls, Input: If non-text content is a control or accepts user input, then it has a name that describes its purpose. Time-Based Media: If non-text content is time-based media, then text alternatives at least provide descriptive identification of the non-text content. Test: If non-text content is a test or exercise that would be invalid if presented in text, then text alternatives at least provide descriptive identification of the non-text content. Sensory: If non-text content is primarily intended to create a specific sensory experience, then text alternatives at least provide descriptive identification of the non-text content. CAPTCHA: If the purpose of non-text content is to confirm that content is being accessed by a person rather than a computer, then text alternatives that identify and describe the purpose of the non-text content are provided, and alternative forms of CAPTCHA using output modes for different types of sensory perception are provided to accommodate different disabilities. Decoration, Formatting, Invisible: If non-text content is pure decoration, is used only for visual formatting, or is not presented to users, then it is implemented in a way that it can be ignored by assistive technology."
+        }
+      ],
+      "note": "The hero photo is the page's main content image, not decoration, not a control, not time-based/test/sensory/CAPTCHA content - none of 1.1.1's exceptions apply, so it needs a text alternative and has none."
+    },
+    {
+      "id": "L2",
+      "quote": "<img src=\"floor-plan.jpg\" alt=\"Floor plan of the 2-bedroom unit showing kitchen, living room, and both bedrooms\">",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "citations": []
+    },
+    {
+      "id": "L3",
+      "quote": "Body copy under the photo gallery: #999999 text on #FFFFFF background, measured contrast ratio 2.85:1, normal (16px) body text.",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "wcag-1.4.3",
+          "text": "The visual presentation of text and images of text has a contrast ratio of at least 4.5:1, except for the following: Large Text: Large-scale text and images of large-scale text have a contrast ratio of at least 3:1; Incidental: Text or images of text that are part of an inactive user interface component, that are pure decoration, that are not visible to anyone, or that are part of a picture that contains significant other visual content, have no contrast requirement. Logotypes: Text that is part of a logo or brand name has no contrast requirement."
+        }
+      ],
+      "note": "2.85:1 is below the 4.5:1 minimum. Not large-scale text (16px, not bold/large), not incidental or a logotype, so no exception applies."
+    },
+    {
+      "id": "L4",
+      "quote": "<input type=\"text\" name=\"email\" placeholder=\"Email\"> - no label element, no aria-label, no aria-labelledby.",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "wcag-3.3.2",
+          "text": "Labels or instructions are provided when content requires user input."
+        },
+        {
+          "provision": "wcag-1.3.1",
+          "text": "Information, structure, and relationships conveyed through presentation can be programmatically determined or are available in text."
+        }
+      ],
+      "note": "No programmatic label at all fails 3.3.2 directly. It's also a 1.3.1 failure: the visual relationship between the field and its purpose (conveyed only by a placeholder, which disappears on input and isn't a substitute for a label) can't be programmatically determined."
+    },
+    {
+      "id": "L5",
+      "quote": "<label for=\"phone\">Phone number</label><input type=\"text\" id=\"phone\" name=\"phone\">",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "citations": []
+    },
+    {
+      "id": "L6",
+      "quote": "<a href=\"/brochure.pdf\">Click here</a> to download more information about the property.",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "wcag-2.4.4",
+          "text": "The purpose of each link can be determined from the link text alone or from the link text together with its programmatically determined link context, except where the purpose of the link would be ambiguous to users in general."
+        }
+      ],
+      "note": "\"Click here\" alone doesn't state the link's purpose, and nothing programmatically ties the following sentence to the link as its context (no aria-describedby, not inside the same list item or heading structure) - out of context (a screen reader's links list, for instance) it's ambiguous."
+    },
+    {
+      "id": "L7",
+      "quote": "<a href=\"/brochure.pdf\">Download the full property brochure (PDF)</a> - same destination as L6, different link text.",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "citations": []
+    },
+    {
+      "id": "L8",
+      "quote": "<button type=\"submit\">Schedule a showing</button>",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "citations": []
+    }
+  ]
+}
