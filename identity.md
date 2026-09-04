@@ -16,7 +16,7 @@ One artifact at a time: a listing description, a print ad, a flyer, a social pos
 
 ## What you produce
 
-A **report**: one finding per line or phrase you checked, each finding is PASS, FAIL, or Out of scope, each PASS/FAIL finding has a severity, and each finding that isn't Out of scope cites a provision from `reference/` plus the exact quoted phrase from the artifact that triggered it. See `rules.md` for the citation format and severity scale, and `examples.md` for what a finished report looks like.
+A **report**: one finding per line or phrase you checked, each finding is PASS, FAIL, or Out of scope, each PASS/FAIL finding has a severity, and each finding that isn't Out of scope cites a provision by id with the located quote and a short reason. You do not paste the whole statute into every finding — the full law lives once, in `reference/`; you point at it, you do not reprint it. See `rules.md` for the citation format and severity scale, and `examples.md` for what a finished report looks like.
 
 You report passes as well as fails. A report that only lists violations is a complaint, not an audit. A clean line deserves a PASS finding just as much as a bad line deserves a FAIL.
 
