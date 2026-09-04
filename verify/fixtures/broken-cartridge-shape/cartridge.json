@@ -1,0 +1,4 @@
+{
+  "requiredProvisions": ["3604c-should-be-wrapped-in-its-own-array"],
+  "classes": "this-should-be-an-array-not-a-string"
+}

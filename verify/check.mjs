@@ -84,13 +84,31 @@ function loadFlaggedPhrasesForCartridge(cartridgeDir, phraseFile) {
 // instead of a bare Node stack trace, and doesn't get built into a half-working cartridge object.
 function checkCartridgeIntegrity(dir, manifest) {
   const errs = [];
-  // These three fields get used unconditionally downstream (as a folder name under
-  // verify/audits/, and to build file paths) - missing any of them isn't a "file doesn't exist"
-  // problem, it's a crash-the-whole-run problem, found by probing a manifest with no id at all.
+  // Presence AND shape, for every field loadCartridges uses unconditionally downstream (as a
+  // folder name, a path segment, or something .filter()/.some()/a for-of loop is called on).
+  // Found systematically during the repair loop's third pass: pass 1 and 2 each found one of
+  // these fields missing checks one at a time (id, artifactAudit); a full sweep here found three
+  // more of the exact same shape (standardFiles, artifact, classes) rather than waiting to trip
+  // over each individually. Required: id, name, standardFiles (array), artifact, artifactAudit.
+  // Optional but must be the right shape if present: classes, generalOnlyIds, requiredProvisions.
   if (!manifest.id) errs.push('manifest is missing "id"');
   if (!manifest.name) errs.push('manifest is missing "name"');
+  if (!Array.isArray(manifest.standardFiles)) errs.push('manifest is missing "standardFiles" (must be an array, even an empty one)');
+  if (!manifest.artifact) errs.push('manifest is missing "artifact"');
   if (!manifest.artifactAudit) errs.push('manifest is missing "artifactAudit"');
-  for (const fname of manifest.standardFiles || []) {
+  if (manifest.classes !== undefined && !Array.isArray(manifest.classes)) errs.push('manifest "classes" must be an array if present');
+  if (manifest.generalOnlyIds !== undefined && !Array.isArray(manifest.generalOnlyIds)) errs.push('manifest "generalOnlyIds" must be an array if present');
+  if (manifest.requiredProvisions !== undefined) {
+    if (!Array.isArray(manifest.requiredProvisions)) {
+      errs.push('manifest "requiredProvisions" must be an array if present');
+    } else {
+      manifest.requiredProvisions.forEach((group, i) => {
+        if (!Array.isArray(group)) errs.push(`manifest "requiredProvisions[${i}]" must itself be an array of provision ids (a group), got ${JSON.stringify(group)}`);
+      });
+    }
+  }
+
+  for (const fname of Array.isArray(manifest.standardFiles) ? manifest.standardFiles : []) {
     if (!existsSync(join(dir, fname))) errs.push(`standardFiles entry "${fname}" does not exist in ${dir}`);
   }
   if (manifest.phraseFile && !existsSync(join(dir, manifest.phraseFile))) {
@@ -410,6 +428,18 @@ function main() {
     console.error('FAIL: verify/fixtures/broken-cartridge was supposed to fail cartridge-integrity but passed - the gate is dead');
   } else {
     console.log('ok (failed as required): verify/fixtures/broken-cartridge (cartridge integrity)');
+  }
+
+  // Same pattern, different failure shape (repair-loop pass 3): a manifest missing required
+  // fields entirely, or with a field present but the wrong type, not just pointing at missing files.
+  const brokenShapeDir = join(root, 'verify', 'fixtures', 'broken-cartridge-shape');
+  const brokenShapeManifest = JSON.parse(readFileSync(join(brokenShapeDir, 'cartridge.json'), 'utf8'));
+  const brokenShapeErrs = checkCartridgeIntegrity(brokenShapeDir, brokenShapeManifest);
+  if (brokenShapeErrs.length === 0) {
+    failed = true;
+    console.error('FAIL: verify/fixtures/broken-cartridge-shape was supposed to fail cartridge-integrity but passed - the gate is dead');
+  } else {
+    console.log(`ok (failed as required): verify/fixtures/broken-cartridge-shape (${brokenShapeErrs.length} shape errors caught)`);
   }
 
   // Regression guard (repair-loop pass 1): loadFlaggedPhrasesForCartridge must read quoted text
