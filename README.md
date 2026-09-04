@@ -26,17 +26,19 @@ flowchart LR
 
 See `examples.md` for three worked audits before you run your first real one. `reference/fair-housing/sample-listing.md` is the synthetic listing this build's own tests run against — audit it yourself and compare your findings to `verify/audits/fair-housing/sample-listing.findings.json` if you want to sanity-check the auditor before trusting it on something real.
 
-## One engine, any rulebook
+## Built on a reusable framework
 
-The auditor and the checker don't change. The standard does. Each standard lives in its own folder under `reference/`, a cartridge: the standard text, a manifest, a sample artifact, and an audit. This build ships two. `reference/fair-housing/` is the one quoted above, the Fair Housing Act's advertising rules. `reference/wcag/` is WCAG 2.1 Level AA, the web accessibility success criteria.
+This is a Fair Housing ad-compliance auditor. It is also, underneath, a reusable auditing framework: the checker, the report shape, and the discipline rules aren't written for Fair Housing specifically. The standard is a cartridge, a folder with the standard text, a manifest, a sample artifact, and an audit. Swap the cartridge and the same framework checks any written standard.
 
-Here's the proof: adding WCAG changed zero lines of `verify/check.mjs`. The same engine audits a real-estate ad against housing law and a web page against accessibility criteria, no code difference between them. The structure carries the audit. The standard is data.
+`reference/` ships exactly one standard. Fair Housing, quoted above. That's the whole product.
 
 **How to add a standard:**
 1. Create `reference/<name>/` with the standard text, quoted verbatim, each provision wrapped in a `<!-- verbatim:ID -->` anchor.
 2. Add `reference/<name>/cartridge.json`: `id`, `name`, `standardFiles`, `requiredProvisions`, `artifact`, `artifactAudit`. `phraseFile`, `classes`, and `generalOnlyIds` are optional — only add them if the standard actually needs them.
 3. Write a sample artifact and an audit under `verify/audits/<name>/`.
 4. Run `node verify/check.mjs`. No code change.
+
+**Proof the framework travels.** `framework-proof/wcag/` is a second, working cartridge, WCAG 2.1 Level AA, kept outside `reference/` so it stays clearly separate from what ships. Same checker, a different root: `node verify/check.mjs --root framework-proof`. Adding it changed zero lines of the audit logic. See `framework-proof/README.md`.
 
 ## The one rule
 
@@ -51,7 +53,7 @@ It doesn't give legal advice, doesn't predict how a court would rule, and doesn'
 ## How this build proves itself
 
 - `verify/check.mjs` re-derives every citation from `reference/` and fails loud if a finding's quote doesn't match byte for byte, cites a provision that doesn't exist, or is missing a severity. Run it: `node verify/check.mjs`.
-- The checker runs every cartridge it finds, not just Fair Housing. Both Fair Housing and WCAG pass the same unchanged checker.
+- The checker runs every cartridge it finds under whatever root you point it at. `node verify/check.mjs` validates the shipped standard; `node verify/check.mjs --root framework-proof` validates the WCAG proof, same unchanged checker.
 - Every check has a negative fixture in `verify/fixtures/` that's supposed to fail — a citation to a provision that doesn't exist, a misquoted provision, a violation with no citation, a false PASS on an obviously bad line, a finding with no severity. If a fixture ever passes, the gate it tests is dead, and CI treats that as a failure in itself.
 - `receipts/` (outside this folder, so it can't leak answers into a walk) holds the frozen test method, a cold walk by a fresh AI session given only this folder, a control run of the same listing with no folder at all, and a human walk where a real person checks one finding against `reference/` by hand. Read `receipts/TEST_METHOD.md` for what was tested and the bar each test had to clear.
 

@@ -14,8 +14,11 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Structural + coverage checker (anchor, verbatim, shape, phrase-sanity, class + line coverage)
+      - name: Structural + coverage checker - shipped standard (reference/, Fair Housing)
         run: node verify/check.mjs
+
+      - name: Structural + coverage checker - framework proof (framework-proof/, WCAG)
+        run: node verify/check.mjs --root framework-proof
 
       - name: No accidental real-world PII in the synthetic sample listing
         run: |

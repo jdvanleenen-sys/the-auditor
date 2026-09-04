@@ -6,9 +6,13 @@
 // this file. See reference/fair-housing/cartridge.json for the manifest shape.
 //
 // Usage:
-//   node verify/check.mjs                 - validate every real audit for every discovered cartridge,
-//                                            run each cartridge's coverage checks, then confirm every
-//                                            verify/fixtures/fail_*.json fails as required
+//   node verify/check.mjs                 - validate every real audit for every cartridge found under
+//                                            reference/, run each cartridge's coverage checks, then
+//                                            confirm every verify/fixtures/fail_*.json fails as required
+//   node verify/check.mjs --root <dir>    - scan <dir> instead of reference/ for cartridges. Same
+//                                            checks, same fixtures. Used to validate framework-proof/
+//                                            (a cartridge folder that isn't a shipped standard) with
+//                                            the exact same checker, no code branching on which root.
 //   node verify/check.mjs --file <path>   - validate one audit file only (cartridge inferred from its
 //                                            parent folder under verify/audits/<id>/), exit 1 if any error
 //
@@ -89,12 +93,11 @@ function checkCartridgeIntegrity(dir, manifest) {
   return errs;
 }
 
-function loadCartridges() {
-  const referenceDir = join(root, 'reference');
+function loadCartridges(cartridgeRootDir) {
   const cartridges = [];
   const integrityErrors = []; // [{ id, errors }] - broken cartridges, reported but not built
-  for (const entry of readdirSync(referenceDir)) {
-    const dir = join(referenceDir, entry);
+  for (const entry of readdirSync(cartridgeRootDir)) {
+    const dir = join(cartridgeRootDir, entry);
     if (!statSync(dir).isDirectory()) continue;
     const manifestPath = join(dir, 'cartridge.json');
     if (!existsSync(manifestPath)) continue;
@@ -255,7 +258,9 @@ function findCartridgeForFile(cartridges, filePath) {
 }
 
 function main() {
-  const { cartridges, integrityErrors } = loadCartridges();
+  const rootFlagIdx = process.argv.indexOf('--root');
+  const cartridgeRootDir = rootFlagIdx !== -1 ? join(root, process.argv[rootFlagIdx + 1]) : join(root, 'reference');
+  const { cartridges, integrityErrors } = loadCartridges(cartridgeRootDir);
   const fileArgIdx = process.argv.indexOf('--file');
 
   if (fileArgIdx !== -1) {
@@ -325,17 +330,25 @@ function main() {
     }
   }
 
+  // The fail_*.json fixtures are written against the fair-housing cartridge's anchors and phrases
+  // (they need real reference text to be a misquote OF). They only apply when that cartridge is
+  // actually in the scanned root - under --root framework-proof there's no fair-housing cartridge
+  // to check them against, so they're skipped there, not failed.
   const fhCartridge = cartridges.find((c) => c.id === 'fair-housing');
   const fixturesDir = join(root, 'verify', 'fixtures');
-  for (const f of readdirSync(fixturesDir).filter((f) => f.startsWith('fail_'))) {
-    const path = join(fixturesDir, f);
-    const audit = JSON.parse(readFileSync(path, 'utf8'));
-    const errs = validateAudit(audit, fhCartridge);
-    if (errs.length === 0) {
-      failed = true;
-      console.error(`FAIL: fixture ${f} was supposed to fail validation but passed - the gate it tests is dead`);
-    } else {
-      console.log(`ok (failed as required): verify/fixtures/${f}`);
+  if (!fhCartridge) {
+    console.log('skip: fail_*.json fixtures need the fair-housing cartridge, not present under this --root');
+  } else {
+    for (const f of readdirSync(fixturesDir).filter((f) => f.startsWith('fail_'))) {
+      const path = join(fixturesDir, f);
+      const audit = JSON.parse(readFileSync(path, 'utf8'));
+      const errs = validateAudit(audit, fhCartridge);
+      if (errs.length === 0) {
+        failed = true;
+        console.error(`FAIL: fixture ${f} was supposed to fail validation but passed - the gate it tests is dead`);
+      } else {
+        console.log(`ok (failed as required): verify/fixtures/${f}`);
+      }
     }
   }
 
