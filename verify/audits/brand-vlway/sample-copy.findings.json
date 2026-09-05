@@ -1,0 +1,170 @@
+{
+  "artifact": "sample-copy.md",
+  "findings": [
+    {
+      "id": "L1",
+      "quote": "AI the vL Way. Less hype. More help.",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "citations": []
+    },
+    {
+      "id": "L2",
+      "quote": "Honestly, this is the best AI course you will ever take.",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "brand-voice-honestly",
+          "text": "Never front-load \"honestly,\" \"to be honest,\" or \"truthfully.\" They add nothing and are a dead giveaway of AI writing."
+        }
+      ],
+      "note": "Opens with \"Honestly,\" the exact front-loaded intensifier the voice rule bans."
+    },
+    {
+      "id": "L3",
+      "quote": "Let's leverage AI to synergize your workflow and move the needle.",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "brand-voice-buzzwords",
+          "text": "Never use corporate buzzwords: no \"leverage,\" \"synergize,\" \"circle back,\" \"move the needle,\" \"align on,\" \"net-net,\" \"deep dive\" (unless used ironically)."
+        }
+      ],
+      "note": "Uses three of the named buzzwords in one line: leverage, synergize, and move the needle."
+    },
+    {
+      "id": "L4",
+      "quote": "AI is a powerful tool that solves all your problems.",
+      "verdict": "FAIL",
+      "severity": "High-risk",
+      "citations": [
+        {
+          "provision": "brand-thought-partner",
+          "text": "Frame AI as a \"thought partner,\" never a \"tool\" or \"solution.\""
+        }
+      ],
+      "note": "Frames AI as a \"tool\" that \"solves all your problems,\" the exact framing the brand rejects in favour of thought partner."
+    },
+    {
+      "id": "L5",
+      "quote": "Think of AI as a thought partner, not a search engine.",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "citations": []
+    },
+    {
+      "id": "L6",
+      "quote": "Great question! So glad you asked, here is the secret.",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "brand-voice-filler-praise",
+          "text": "Never use filler praise: no \"Great question!\" or \"That's a fantastic point!\""
+        }
+      ],
+      "note": "Opens with \"Great question!\", the exact filler praise the voice rule names."
+    },
+    {
+      "id": "L7",
+      "quote": "Unlock your potential now with our revolutionary AI system 🚀🔥",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "brand-voice-emoji",
+          "text": "Never use emojis in professional or working communication."
+        },
+        {
+          "provision": "brand-anti-patterns",
+          "text": "Anti-patterns (never do): Hype, fear-based messaging, guru posturing, corporate buzzwords, emojis, blue/purple tech-bro aesthetics, stock robot images, long preambles, filler praise"
+        }
+      ],
+      "note": "Two emojis in the copy breaks the no-emoji rule, and \"revolutionary\" plus \"unlock your potential now\" is exactly the hype the anti-patterns list rejects."
+    },
+    {
+      "id": "L8",
+      "quote": "Our brand colour is a bright neon blue for that techy AI feel.",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "brand-no-tech-blue",
+          "text": "What to avoid: Gradients or 3D effects; neon, glow, or anything that screams \"AI\"; overly decorative fonts; circuit board patterns, binary code, or robot imagery; neon or electric \"tech\" blue (the cliché every AI brand uses)."
+        },
+        {
+          "provision": "brand-palette",
+          "text": "the secondary colour changed from Deep Teal to Deep Navy (#14314F). Navy + Cognac is the pairing going forward."
+        }
+      ],
+      "note": "Neon tech blue is named explicitly in what to avoid, and it is not one of the current core brand colours (Cognac, Deep Navy, Warm White)."
+    },
+    {
+      "id": "L9",
+      "quote": "Headings are set in Times New Roman, ALL CAPS.",
+      "verdict": "FAIL",
+      "severity": "High-risk",
+      "citations": [
+        {
+          "provision": "brand-typography",
+          "text": "Headings in DM Sans Bold, Warm Charcoal or Cognac, sentence case always."
+        }
+      ],
+      "note": "The type rule requires DM Sans Bold in sentence case. Times New Roman in all caps breaks both the typeface and the sentence-case rule (the colour part of this rule is separately flagged as stale in brand-standard.md's accuracy note and isn't what this finding turns on)."
+    },
+    {
+      "id": "L10",
+      "quote": "We help you organize your day and center your focus.",
+      "verdict": "FAIL",
+      "severity": "Cautionary",
+      "citations": [
+        {
+          "provision": "brand-canadian-english",
+          "text": "Canadian English spelling and conventions."
+        }
+      ],
+      "note": "Uses American spellings (organize, center). The brand uses Canadian English (organise, centre)."
+    },
+    {
+      "id": "L11",
+      "quote": "This is going to change your life — forever, guaranteed!",
+      "verdict": "FAIL",
+      "severity": "High-risk",
+      "citations": [
+        {
+          "provision": "brand-voice-emdash",
+          "text": "Never use em dashes. They are one of the clearest tells of AI writing. Use periods, commas, or parentheses instead."
+        },
+        {
+          "provision": "brand-anti-patterns",
+          "text": "Anti-patterns (never do): Hype, fear-based messaging, guru posturing, corporate buzzwords, emojis, blue/purple tech-bro aesthetics, stock robot images, long preambles, filler praise"
+        }
+      ],
+      "note": "Contains an em dash, which the voice rule bans, and \"change your life forever, guaranteed\" is hype and guru posturing from the anti-patterns list."
+    },
+    {
+      "id": "L12",
+      "quote": "This course qualifies for a professional development tax credit in your province.",
+      "verdict": "OUT_OF_SCOPE",
+      "severity": null,
+      "citations": [],
+      "note": "Whether the course qualifies for a tax credit is a factual and legal question this brand standard does not govern. Verify it with an accountant. This cartridge checks brand and voice, not the accuracy of a tax claim."
+    },
+    {
+      "id": "L13",
+      "quote": "Follow @thevlway.ai and tell me how it went.",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "citations": []
+    },
+    {
+      "id": "L14",
+      "quote": "We keep it plain. No hype, just what actually works.",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "citations": []
+    }
+  ]
+}

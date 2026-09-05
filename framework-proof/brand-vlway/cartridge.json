@@ -1,0 +1,8 @@
+{
+  "id": "brand-vlway",
+  "name": "AI the vL Way brand and voice standard (selected rules)",
+  "standardFiles": ["brand-standard.md"],
+  "requiredProvisions": [["brand-palette", "brand-no-tech-blue", "brand-typography", "brand-thought-partner", "brand-anti-patterns", "brand-canadian-english", "brand-voice-emdash", "brand-voice-honestly", "brand-voice-buzzwords", "brand-voice-filler-praise", "brand-voice-emoji"]],
+  "artifact": "sample-copy.md",
+  "artifactAudit": "sample-copy.findings.json"
+}
