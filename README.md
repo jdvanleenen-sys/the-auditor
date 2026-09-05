@@ -40,6 +40,8 @@ The same engine runs four standards across four unrelated domains, each a cartri
 
 The standard is a cartridge. The engine is the product. Swapping the subject changes zero lines of the engine or the checker.
 
+Every company checks its work against a pile of standards (accessibility, privacy, contracts, brand, industry rules), pays people to do it by hand, and watches the standards keep changing anyway. This is one engine that checks any of them and proves each finding against the real rule. That's why the framework, not the subject, is the point.
+
 **How to add a standard:**
 1. Create `reference/<name>/` with the standard text, quoted verbatim, each provision wrapped in a `<!-- verbatim:ID -->` anchor.
 2. Add `reference/<name>/cartridge.json`: `id`, `name`, `standardFiles`, `requiredProvisions`, `artifact`, `artifactAudit`. `phraseFile`, `classes`, and `generalOnlyIds` are optional; only add them if the standard actually needs them.
@@ -65,9 +67,9 @@ Said plainly, not buried in a footnote: this catches phrases that match or resem
 ## How this build proves itself
 
 - `verify/check.mjs` re-derives every citation from `reference/` and fails loud if a finding's quote doesn't match byte for byte, cites a provision that doesn't exist, or is missing a severity. Run it: `node verify/check.mjs`.
-- The checker runs every cartridge it finds under whatever root you point it at. `node verify/check.mjs` validates the shipped standard; `node verify/check.mjs --root framework-proof` validates the WCAG proof, same unchanged checker.
+- The checker runs every cartridge it finds under whatever root you point it at. `node verify/check.mjs` validates the shipped standard; `node verify/check.mjs --root framework-proof` validates all three proof cartridges (WCAG, App Store, and brand-vlway), same unchanged checker.
 - Every check has a negative fixture in `verify/fixtures/` that's supposed to fail. `fail_*.json` are bad findings (a bad provision id, a misquote, a fabricated or empty general-id citation, missing citation/severity/protected-class, a citation smuggled into an out-of-scope finding, a false PASS). `broken-cartridge/` and `broken-cartridge-shape/` are bad manifests (missing files vs. missing/wrong-typed fields). `phrase-parsing/` is a parser regression guard, not a finding fixture. The file names are the authoritative list, not this sentence. Read the folder if you want the current count. If a fixture ever passes, the gate it tests is dead, and CI treats that as a failure in itself.
-- `receipts/` (outside this folder, so it can't leak answers into a walk) holds the frozen test method, a cold walk by a fresh AI session given only this folder, a control run of the same listing with no folder at all, and a human walk where a real person checks one finding against `reference/` by hand. Read `receipts/TEST_METHOD.md` for what was tested and the bar each test had to clear.
+- `receipts/` (outside this folder, so it can't leak answers into a walk) holds the frozen test method, a cold walk by a fresh AI session given only this folder, a control run of the same listing with no folder at all, and a human walk where a real person checks one finding against `reference/` by hand. It also holds the cross-brain audit results (the same folder scored against a hard artifact on several independent models), the pressure tests (a correct finding held under direct user pressure), and the law-accuracy check (the shipped text checked against the primary source). Read `receipts/TEST_METHOD.md` for what was tested and the bar each test had to clear.
 
 ## What's synthetic here
 
