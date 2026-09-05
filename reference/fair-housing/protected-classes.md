@@ -22,3 +22,5 @@ Both [[3604c]] and [[100.75]] name the same seven classes, word for word. These 
 ## Not federally protected (do not flag under 3604c/100.75 alone)
 
 Some states and cities add protected classes beyond the federal seven — commonly source of income, sexual orientation, gender identity, age, marital status, or military status. A finding that flags one of these must **not** cite [[3604c]] or [[100.75]] (they do not cover it) and must say plainly that it is outside this auditor's binding standard. See `rules.md` for how the auditor handles this case (flag as out-of-scope, not as a violation).
+
+**Carve-out on age:** that's age discrimination against a person in the abstract (a landlord who won't rent to someone for being, say, 25). It is not the same thing as an occupancy age restriction ("55 and over," "no residents under 18") — that excludes households with children, which is familial status, federally protected. See `rules.md` rule 5b before flagging an age-restricted community as simply out-of-scope age.

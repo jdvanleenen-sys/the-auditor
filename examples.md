@@ -1,6 +1,6 @@
 # Worked examples
 
-Five short Fair Housing audits, the standard this auditor ships, plus one from `framework-proof/` (WCAG) showing the same report shape holds on a completely different standard. Each shows the shape from `rules.md`: located quote, verdict, severity, citation. The Fair Housing snippets are illustrative only, written separately from `reference/fair-housing/sample-listing.md` (the artifact this build's tests audit) so reading this file doesn't hand you the answer to that audit.
+Eight short Fair Housing audits, the standard this auditor ships, plus one from `framework-proof/` (WCAG) showing the same report shape holds on a completely different standard. Examples 6-8 lock judgment rules a fixture can't grade (an age restriction's real class, coded steering language, compounding's effect on severity) — each is enforced by rule text plus the worked example itself, not by `verify/check.mjs`. Each shows the shape from `rules.md`: located quote, verdict, severity, citation. The Fair Housing snippets are illustrative only, written separately from `reference/fair-housing/sample-listing.md` (the artifact this build's tests audit) so reading this file doesn't hand you the answer to that audit.
 
 **Two forms, shown together below.** What you're reading here is the **compact report form** — the one a human or a live model run actually produces: a provision id, the located quote, and a short reason. It doesn't paste the full law into every finding, because pasting the whole statute per finding is copying, not citing, and on a listing with several violations it's enough text to blow a model's output limit and truncate the report mid-run. You open `reference/` to read the law itself. Example 1 also shows the **checkable findings JSON** — the verbose form that lives in `verify/audits/`, carries the full verbatim text, and is what `verify/check.mjs` actually reads to prove a citation is real. That file is static and committed, so it never truncates. Same discipline, two jobs: the report points, the findings file proves the pointer is honest.
 
@@ -105,7 +105,40 @@ This example exists so `verify/check.mjs` can confirm every one of the seven pro
 - Citation: `100.75c1`, `3604c` — reason: see the tier-test note below. Matches no phrase-guidance entry directly; connects back to 100.75c1's own language via one documented inferential step.
 - Note: This isn't one of the three phrases `rules.md` rule 2's tier test names ("no children," "must be able-bodied," "bachelor pad") — it's a fourth, to show the test applied cold. Run the test: is the preference on its face, zero inference? No — "traditional household" doesn't name a class or an occupant trait the way "no children" does; a reader has to take one inferential step, recognizing "traditional household" as familiar euphemistic shorthand (widely documented in fair-housing training material as a stand-in for "no unmarried couples" or "no families with children") rather than a literal description of decor or lifestyle. That one inferential step is exactly rule 2's line between Violation and High-risk: on-its-face gets Violation, one inference gets High-risk. It's not Cautionary either — this isn't a case where reasonable readers disagree it's a preference at all (contrast "bachelor pad," which has a real contested history); the disagreement here, if any, is only about which class it targets, not whether it targets one. Familial status is the class named in the citation because "traditional household" is most commonly documented as a marital-status/family-composition proxy, not because the phrase couldn't also read as age-coded — the auditor names the class the sourced pattern actually points to, not every class a suspicious reader might guess at.
 
-## Example 6 — proof the framework travels, not a second standard
+## Example 6 — an age restriction is familial status, not out-of-scope age
+
+**Artifact snippet:** *"Quiet 55-and-over community, no residents under 55 permitted, close to shopping and transit."*
+
+**Finding**
+- Located quote: "55-and-over community, no residents under 55 permitted"
+- Verdict: FAIL
+- Severity: High-risk
+- Citation: `100.75c1`, `3604c` — reason: an occupancy age floor necessarily excludes households with children, which is familial status, not the state/local "age" bucket rule 5 names for age discrimination against a person in the abstract. See `rules.md` rule 5b.
+- Note: Lawful only if the property qualifies for the Housing for Older Persons Act exemption (42 U.S.C. § 3607(b) — cited by name, not one of the two provisions shipped verbatim in `reference/`). The ad's text alone doesn't prove HOPA qualification (generally: 80%+ of units with one resident 55+, published policies and procedures). Flag it and tell the reader to verify the exemption before treating this as compliant. This is explicitly NOT Out-of-scope age — see `rules.md` rule 5's carve-out and rule 5b for the full reasoning.
+
+## Example 7 — coded group-preference language with no class named
+
+**Artifact snippet:** *"Great neighbours, full of the right kind of people, in a safe and traditional part of town."*
+
+**Finding**
+- Located quote: "full of the right kind of people"
+- Verdict: FAIL
+- Severity: High-risk
+- Citation: `100.75c1` — reason: conveys a group preference under 100.75c1's own "available or not available to a particular group" language, even though no protected class is named outright. See `rules.md` rule 6d.
+- Note: No single class is stated, and the artifact gives no further basis to pin down which one — a careful auditor names the ambiguity itself in the note rather than guessing a class. (A real audit with more context, a specific neighborhood description, or a pattern of similar phrasing might narrow this to race or national origin, per how this coded pattern is documented in steering cases; this snippet alone doesn't supply that context, so the finding says so rather than inventing it.)
+
+## Example 8 — compounding escalates the severity
+
+**Artifact snippet:** *"Cozy bachelor pad, ideal for a single guy who wants a low-key place to crash."*
+
+**Finding**
+- Located quote: the whole sentence above
+- Verdict: FAIL
+- Severity: Violation
+- Citation: `100.75c1`, `3604c` — reason: "ideal for a single guy" states a sex/marital-status preference close to on its face; "bachelor pad" reinforces the same class rather than diluting it. Compounding takes the higher severity the more direct clause supports, not the weaker one. See `rules.md` rule 6e.
+- Contrast: `sample-listing.md` L6, "Perfect bachelor pad for a young professional starting out," keeps the same first clause but pairs it with a neutral second clause — no compounding, stays Cautionary. Same opening phrase, opposite outcome, because of what follows it.
+
+## Example 9 — proof the framework travels, not a second standard
 
 This auditor ships one standard: Fair Housing, in `reference/`. `framework-proof/wcag/` is not a second thing it checks day to day — it's a working cartridge kept outside `reference/` to prove the checker isn't written for Fair Housing specifically. Same `cartridge.json` shape, same anchor format, same `verify/check.mjs`, run against a different root: `node verify/check.mjs --root framework-proof`. See `framework-proof/README.md`.
 
