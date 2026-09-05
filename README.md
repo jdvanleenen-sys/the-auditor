@@ -34,13 +34,19 @@ This is a Fair Housing ad-compliance auditor. It is also, underneath, a reusable
 
 `reference/` ships exactly one standard. Fair Housing, quoted above. That's the whole product.
 
+The same engine runs four standards across four unrelated domains, each a cartridge, each added with no code change: Fair Housing law (`reference/fair-housing/`, shipped), WCAG 2.1 accessibility (`framework-proof/wcag/`), Apple App Store review policy (`framework-proof/app-store/`), and the AI the vL Way brand and voice guide (`framework-proof/brand-vlway/`).
+
+**Load any of them.** `node load.mjs --list` shows what's loadable; `node load.mjs app-store` prints a ready-to-run auditor for that standard, engine core plus standard plus a worked example, in one block you can paste into any AI. See `LOAD.md` for the full instructions.
+
+The standard is a cartridge. The engine is the product. Swapping the subject changes zero lines of the engine or the checker.
+
 **How to add a standard:**
 1. Create `reference/<name>/` with the standard text, quoted verbatim, each provision wrapped in a `<!-- verbatim:ID -->` anchor.
 2. Add `reference/<name>/cartridge.json`: `id`, `name`, `standardFiles`, `requiredProvisions`, `artifact`, `artifactAudit`. `phraseFile`, `classes`, and `generalOnlyIds` are optional; only add them if the standard actually needs them.
 3. Write a sample artifact and an audit under `verify/audits/<name>/`.
 4. Run `node verify/check.mjs`. No code change.
 
-**Proof the framework travels.** `framework-proof/wcag/` is a second, working cartridge, WCAG 2.1 Level AA, kept outside `reference/` so it stays clearly separate from what ships. Same checker, a different root: `node verify/check.mjs --root framework-proof`. Adding it changed zero lines of the audit logic. See `framework-proof/README.md`.
+**Proof the framework travels.** `framework-proof/` holds three working cartridges beyond Fair Housing (WCAG, App Store, brand-vlway), kept outside `reference/` so they stay clearly separate from what ships. Same checker, a different root: `node verify/check.mjs --root framework-proof`. Adding any of them changed zero lines of the audit logic. See `framework-proof/README.md`.
 
 ## The one rule
 
