@@ -35,7 +35,7 @@
     },
     {
       "id": "L5",
-      "quote": "No children please — this home is best suited for a quiet, mature couple.",
+      "quote": "No children please. This home is best suited for a quiet, mature couple.",
       "verdict": "FAIL",
       "severity": "Violation",
       "protectedClass": "familial status",
@@ -100,7 +100,7 @@
     },
     {
       "id": "L9",
-      "quote": "English-speaking tenants only, please — makes communication easier for everyone.",
+      "quote": "English-speaking tenants only, please. It makes communication easier for everyone.",
       "verdict": "FAIL",
       "severity": "Violation",
       "protectedClass": "national origin",
