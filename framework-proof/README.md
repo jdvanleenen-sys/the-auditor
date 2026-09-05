@@ -11,7 +11,7 @@ node verify/check.mjs                     # the shipped standard, reference/fair
 node verify/check.mjs --root framework-proof   # this proof, framework-proof/wcag/
 ```
 
-`--root` only tells the checker which folder to scan for cartridges. It's a where-to-look flag, not a per-standard code path. Precisely: the commit that added WCAG's actual content (`framework-proof/wcag/`, its cartridge.json, its audit) changed zero lines of `verify/check.mjs`. Two commits *before* that one made the engine's handling of optional manifest fields (`phraseFile`, `classes`) genuinely generic instead of only working by accident for Fair Housing — those were real fixes, found by trying to load a cartridge with neither field set, and they're prerequisites for any second cartridge, not a WCAG special case. See the commit history on `verify/check.mjs` if you want to check both claims yourself.
+`--root` only tells the checker which folder to scan for cartridges. It's a where-to-look flag, not a per-standard code path. Precisely: the commit that added WCAG's actual content (`framework-proof/wcag/`, its cartridge.json, its audit) changed zero lines of `verify/check.mjs`. Two commits *before* that one made the engine's handling of optional manifest fields (`phraseFile`, `classes`) genuinely generic instead of only working by accident for Fair Housing. Those were real fixes, found by trying to load a cartridge with neither field set, and they're prerequisites for any second cartridge, not a WCAG special case. See the commit history on `verify/check.mjs` if you want to check both claims yourself.
 
 Adding a standard, shipped or proof, is the same four steps either way:
 

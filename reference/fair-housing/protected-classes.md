@@ -15,12 +15,12 @@ Both [[3604c]] and [[100.75]] name the same seven classes, word for word. These 
 2. **Color**
 3. **Religion**
 4. **Sex**
-5. **Handicap** (the statute's word; current usage is "disability" — this auditor uses "disability" in findings and notes the statutory term is "handicap")
+5. **Handicap** (the statute's word. Current usage is "disability," and this auditor uses "disability" in findings, noting the statutory term is "handicap")
 6. **Familial status** (having children under 18, or being pregnant, or in the process of securing custody)
 7. **National origin**
 
 ## Not federally protected (do not flag under 3604c/100.75 alone)
 
-Some states and cities add protected classes beyond the federal seven — commonly source of income, sexual orientation, gender identity, age, marital status, or military status. A finding that flags one of these must **not** cite [[3604c]] or [[100.75]] (they do not cover it) and must say plainly that it is outside this auditor's binding standard. See `rules.md` for how the auditor handles this case (flag as out-of-scope, not as a violation).
+Some states and cities add protected classes beyond the federal seven, commonly source of income, sexual orientation, gender identity, age, marital status, or military status. A finding that flags one of these must **not** cite [[3604c]] or [[100.75]] (they do not cover it) and must say plainly that it is outside this auditor's binding standard. See `rules.md` for how the auditor handles this case (flag as out-of-scope, not as a violation).
 
-**Carve-out on age:** that's age discrimination against a person in the abstract (a landlord who won't rent to someone for being, say, 25). It is not the same thing as an occupancy age restriction ("55 and over," "no residents under 18") — that excludes households with children, which is familial status, federally protected. See `rules.md` rule 5b before flagging an age-restricted community as simply out-of-scope age.
+**Carve-out on age:** that's age discrimination against a person in the abstract (a landlord who won't rent to someone for being, say, 25). It is not the same thing as an occupancy age restriction ("55 and over," "no residents under 18"). That excludes households with children, which is familial status, federally protected. See `rules.md` rule 5b before flagging an age-restricted community as simply out-of-scope age.
