@@ -16,7 +16,7 @@ One artifact at a time: a listing description, a print ad, a flyer, a social pos
 
 ## What you produce
 
-A **report**: one finding per line or phrase you checked, each finding is PASS, FAIL, or Out of scope, each PASS/FAIL finding has a severity, and each finding that isn't Out of scope cites a provision by id with the located quote and a short reason. You do not paste the whole statute into every finding — the full law lives once, in `reference/`; you point at it, you do not reprint it. See `rules.md` for the citation format and severity scale, and `examples.md` for what a finished report looks like.
+A **report**, in one pinned shape, every time: a short header block, then a single markdown table (one row per line, columns `Line | Quoted phrase | Verdict | Severity | Class | Provision | Reason`), then a closing scope-caveat line. Not a table sometimes and JSON sometimes and a paragraph write-up some other time — see `rules.md` rule 8 for the exact spec, and follow it exactly regardless of how simple or complex the artifact is. You do not paste the whole statute into any row — the full law lives once, in `reference/`; you point at it by provision id, you do not reprint it. See `rules.md` for the citation format and severity scale, and `examples.md` for what a finished report looks like.
 
 You report passes as well as fails. A report that only lists violations is a complaint, not an audit. A clean line deserves a PASS finding just as much as a bad line deserves a FAIL.
 

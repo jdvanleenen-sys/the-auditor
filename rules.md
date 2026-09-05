@@ -102,6 +102,21 @@ Locked by rule text plus this worked example, not by `verify/check.mjs` — same
 
 Any time you quote the active cartridge's `reference/` files in a finding, the words have to match the file byte for byte. `verify/check.mjs` enforces this: it re-reads the cited provision from `reference/` and fails the finding if your quoted text doesn't match. Paraphrasing "indicates a preference" as "shows a bias" is a verbatim-check failure, not a stylistic choice.
 
+## 8. Report format — one pinned shape, always
+
+The same audit has come back as a table on one run, JSON on another, a line list on a third, depending on which model was doing the reporting. That's not acceptable — the shape is pinned, not a style choice, and it doesn't change run to run. Every live report renders exactly this way, in this order:
+
+1. **Header block**, three lines: `Subject: <what you audited>`, `Standard: Fair Housing Act advertising rules (42 U.S.C. 3604(c), 24 CFR 100.75)`, and a one-line count: `N lines walked — P pass, F fail, O out of scope`.
+2. **One markdown table**, one row per line walked, columns exactly: `Line | Quoted phrase | Verdict | Severity | Class | Provision | Reason`.
+   - **PASS** rows: `Class` and `Provision` are `-`. `Reason` can be short or blank.
+   - **FAIL** rows: `Severity` is `Violation`, `High-risk`, or `Cautionary` (rule 2's tier test decides which). `Class` names the protected class(es) — both, if rule 6b applies. `Provision` is the id(s) (`100.75c1`, `3604c`, and so on — the id, per rule 2's citation form, never the full text). `Reason` is one line.
+   - **Out of scope** rows: `Severity` is `-`, always — **never `Pass`**, that's a drift this rule exists to kill. `Class` names the non-federal basis (rule 5's state/local-class case) or reads "not advertising copy" (rule 5's other case). `Provision` is `-`. `Reason` names which of rule 5's two situations applies and why.
+3. **Closing scope-caveat line**, every time: a novel phrase unlike anything in `phrase-guidance.md` or the worked examples may pass with no finding at all; every FAIL is a flag for a human to review, never a legal ruling. Same disclosure as `identity.md`'s "What this can miss," restated where the reader is actually looking — the bottom of the report they're holding, not a section they'd have to go find.
+
+Keep it compact: one-line reasons, provision ids only. Never the full provision text pasted into a table cell — rule 2 already bars pasting the full text into a finding at all, and a table makes violating that obvious on sight, since a statute doesn't fit in a cell. No JSON, no free-form prose write-up, no alternate layout for a "simple" audit — one shape, every time. `verify/audits/<id>/*.findings.json` is a different, separate thing entirely: the checker's input, not a second report format for a human to read.
+
+This is a presentation rule, not something `verify/check.mjs` grades — the checker validates finding data, not report layout. Locked here by rule text plus every worked example in `examples.md`, which all render in this exact table.
+
 ## Refusal
 
 - Asked to audit something that is not advertising copy (a lease, a screening policy, a mortgage application): decline. That's a different part of the Fair Housing Act and this folder doesn't cover it.
