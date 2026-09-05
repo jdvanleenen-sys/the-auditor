@@ -1,0 +1,138 @@
+{
+  "artifact": "sample-listing.md",
+  "findings": [
+    {
+      "id": "L1",
+      "quote": "App Name: Habitly: Daily Habit Tracker",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "citations": []
+    },
+    {
+      "id": "L2",
+      "quote": "Subtitle: Best habit app, streaks, todo, planner, reminders, journal 2026",
+      "verdict": "FAIL",
+      "severity": "High-risk",
+      "citations": [
+        {
+          "provision": "app-2.3.7",
+          "text": "Choose a unique app name, assign keywords that accurately describe your app, and don't try to pack any of your metadata with trademarked terms, popular app names, pricing information, or other irrelevant phrases just to game the system. App names must be limited to 30 characters. Metadata such as app names, subtitles, screenshots, and previews should not include prices, terms, or descriptions that are not specific to the metadata type."
+        }
+      ],
+      "note": "The subtitle packs the metadata with a string of generic search terms (best habit app, streaks, todo, planner, reminders, journal) to game the system, which 2.3.7 prohibits."
+    },
+    {
+      "id": "L3",
+      "quote": "Promotional Text: Now only $2.99, 50% off this week!",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "app-2.3.7",
+          "text": "Choose a unique app name, assign keywords that accurately describe your app, and don't try to pack any of your metadata with trademarked terms, popular app names, pricing information, or other irrelevant phrases just to game the system. App names must be limited to 30 characters. Metadata such as app names, subtitles, screenshots, and previews should not include prices, terms, or descriptions that are not specific to the metadata type."
+        }
+      ],
+      "note": "2.3.7 states metadata should not include prices or terms that are not specific to the metadata type. The promotional text puts a price and a discount into metadata."
+    },
+    {
+      "id": "L4",
+      "quote": "Description: The calmest way to build habits that actually stick.",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "citations": []
+    },
+    {
+      "id": "L5",
+      "quote": "Description: Also available on Android, get it on Google Play too!",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "app-2.3.10",
+          "text": "Make sure your app is focused on the experience of the Apple platforms it supports, and don't include names, icons, or imagery of other mobile platforms or alternative app marketplaces in your app or metadata, unless there is specific, approved interactive functionality."
+        }
+      ],
+      "note": "Names another mobile platform (Android) and another app marketplace (Google Play) in the metadata, which 2.3.10 prohibits."
+    },
+    {
+      "id": "L6",
+      "quote": "Description: Unlock Premium by paying on our website at habitly.com/upgrade to avoid App Store fees.",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "app-3.1.1",
+          "text": "If you want to unlock features or functionality within your app, (by way of example: subscriptions, in-game currencies, game levels, access to premium content, or unlocking a full version), you must use in-app purchase. Apps may not use their own mechanisms to unlock content or functionality, such as license keys, augmented reality markers, QR codes, cryptocurrencies and cryptocurrency wallets, etc."
+        }
+      ],
+      "note": "Directs users to an external website to pay for unlocking premium features. 3.1.1 requires in-app purchase to unlock features and forbids other mechanisms."
+    },
+    {
+      "id": "L7",
+      "quote": "Description: Includes a built-in virus scanner that removes iOS malware.",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "app-2.3.1",
+          "text": "Similarly, marketing your app in a misleading way, such as by promoting content or services that it does not actually offer (e.g. iOS-based virus and malware scanners) or promoting a false price, whether within or outside of the App Store, is grounds for removal of your app from the App Store or a block from installing via alternative distribution and termination of your developer account."
+        }
+      ],
+      "note": "2.3.1 names iOS-based virus and malware scanners as its own example of misleading marketing, because iOS does not permit an app to scan the system for malware. Promoting one is a direct match."
+    },
+    {
+      "id": "L8",
+      "quote": "Subscription: Habitly Pro auto-renews at $4.99.",
+      "verdict": "FAIL",
+      "severity": "High-risk",
+      "citations": [
+        {
+          "provision": "app-3.1.2c",
+          "text": "Before asking a customer to subscribe, you should clearly describe what the user will get for the price. How many issues per month? How much cloud storage? What kind of access to your service?"
+        }
+      ],
+      "note": "States an auto-renewing price but never describes what the subscriber actually gets for it, which 3.1.2(c) requires before asking a customer to subscribe."
+    },
+    {
+      "id": "L9",
+      "quote": "Privacy: We collect your email, contacts, and usage data to improve the app.",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "app-5.1.1i",
+          "text": "All apps must include a link to their privacy policy in the App Store Connect metadata field and within the app in an easily accessible manner."
+        }
+      ],
+      "note": "The listing declares it collects email, contacts, and usage data but provides no link to a privacy policy. 5.1.1(i) requires all apps to include a privacy policy link."
+    },
+    {
+      "id": "L10",
+      "quote": "Account: You must create an account to use Habitly, and there is no way to delete your account.",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "citations": [
+        {
+          "provision": "app-5.1.1v",
+          "text": "If your app supports account creation, you must also offer account deletion within the app."
+        }
+      ],
+      "note": "The app supports account creation but states there is no way to delete the account. 5.1.1(v) requires account deletion to be offered within the app."
+    },
+    {
+      "id": "L11",
+      "quote": "Screenshots: The screenshots show the app's calendar view and streak counter.",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "citations": []
+    },
+    {
+      "id": "L12",
+      "quote": "What's New: This update improves battery performance and fixes several crashes.",
+      "verdict": "OUT_OF_SCOPE",
+      "severity": null,
+      "citations": [],
+      "note": "Whether battery performance improved and crashes are fixed can only be confirmed by running the app binary during review, not from the listing text. This cartridge audits store metadata, so it does not verify runtime behavior."
+    }
+  ]
+}

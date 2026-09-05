@@ -1,0 +1,8 @@
+{
+  "id": "app-store",
+  "name": "Apple App Store Review Guidelines (selected provisions)",
+  "standardFiles": ["app-store-guidelines.md"],
+  "requiredProvisions": [["app-2.3.1", "app-2.3.7", "app-2.3.10", "app-3.1.1", "app-3.1.2c", "app-5.1.1i", "app-5.1.1v"]],
+  "artifact": "sample-listing.md",
+  "artifactAudit": "sample-listing.findings.json"
+}
