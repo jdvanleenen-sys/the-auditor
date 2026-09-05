@@ -1,0 +1,21 @@
+{
+  "artifact": "fixture: proves the addiction-history/current-use boundary both ways in one file - a false PASS on the protected history phrase must be caught, a legitimate PASS on the unprotected current-use phrase must NOT be",
+  "findings": [
+    {
+      "id": "fx12a",
+      "quote": "no history of substance abuse, please",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "protectedClass": null,
+      "citations": []
+    },
+    {
+      "id": "fx12b",
+      "quote": "Building policy: no current illegal drug use permitted on the premises.",
+      "verdict": "PASS",
+      "severity": "Pass",
+      "protectedClass": null,
+      "citations": []
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Worked examples
 
-Eight short Fair Housing audits, the standard this auditor ships, plus one from `framework-proof/` (WCAG) showing the same report shape holds on a completely different standard. Examples 6-8 lock judgment rules a fixture can't grade (an age restriction's real class, coded steering language, compounding's effect on severity) — each is enforced by rule text plus the worked example itself, not by `verify/check.mjs`. The Fair Housing snippets are illustrative only, written separately from `reference/fair-housing/sample-listing.md` (the artifact this build's tests audit) so reading this file doesn't hand you the answer to that audit.
+Nine short Fair Housing audits, the standard this auditor ships, plus one from `framework-proof/` (WCAG) showing the same report shape holds on a completely different standard. Examples 6-9 lock judgment rules a fixture can't fully grade (an age restriction's real class, coded steering language, compounding's effect on severity, the addiction-history/current-use disability boundary) — each is enforced by rule text or sourced guidance plus the worked example itself, not by `verify/check.mjs` alone. The Fair Housing snippets are illustrative only, written separately from `reference/fair-housing/sample-listing.md` (the artifact this build's tests audit) so reading this file doesn't hand you the answer to that audit.
 
 **Every example below renders in the one pinned report shape** from `rules.md` rule 8: a short header block, one markdown table, a closing scope-caveat line. Not a table sometimes and JSON sometimes and a paragraph write-up some other time — this is the only shape a live report ever takes, on any artifact, however simple or complex. Explanatory notes below a table are teaching material for this file, not part of what a live report outputs — a real report stops at the caveat line.
 
@@ -116,7 +116,17 @@ No single class is stated, and the artifact gives no further basis to pin down w
 
 Contrast `sample-listing.md` L6, "Perfect bachelor pad for a young professional starting out": same opening phrase, but the second clause is neutral, doesn't compound at all per rule 6, and L6 correctly stays Cautionary. Same first clause, opposite second clause, opposite outcome — that contrast is the whole rule.
 
-## Example 9 — proof the framework travels, not a second standard
+## Example 9 — a history of addiction is a protected disability; current use is not
+
+**Artifact snippet:** *"Sober living community; no history of substance abuse, please."*
+
+| Line | Quoted phrase | Verdict | Severity | Class | Provision | Reason |
+|---|---|---|---|---|---|---|
+| 1 | no history of substance abuse, please | FAIL | High-risk | disability | 100.75c1, 3604c | A past history of addiction, including being in recovery, is itself a protected disability under the FHA. Excluding applicants for that history is a handicap-based limitation. See `phrase-guidance.md`, disability, "no history of substance abuse." |
+
+**The boundary, stated because it's the one part of this that's easy to get backwards:** a past addiction is protected; ongoing, current illegal drug use is not. "No history of substance abuse" excludes people *for their past*, which is exactly what's protected — that's the FAIL above. A line reading "no current illegal drug use" or "must not be actively using illegal drugs" is a different claim entirely, about present conduct, and current illegal drug use is explicitly carved out of FHA disability protection (National Housing Law Project, "Fair Housing and Reentry," nhlp.org, retrieved 2026-09-05: "current use of illegal substances cannot constitute a disability under the FHA"). Don't let "sober living community" in the same sentence read as evidence either way on its own — a property can legitimately be a sober-living or recovery-focused community; what's flagged here is excluding people *for having a history*, not the property's focus.
+
+## Example 10 — proof the framework travels, not a second standard
 
 This auditor ships one standard: Fair Housing, in `reference/`. `framework-proof/wcag/` is not a second thing it checks day to day — it's a working cartridge kept outside `reference/` to prove the checker isn't written for Fair Housing specifically. Same `cartridge.json` shape, same anchor format, same `verify/check.mjs`, run against a different root: `node verify/check.mjs --root framework-proof`. See `framework-proof/README.md`.
 
