@@ -8,6 +8,8 @@ result: "Passed both rounds. No front-door failure: she found the law file and r
 
 # Human walk, run 02: a stranger verifies the tool, then out-audits it
 
+The raw, unedited transcript this write-up is drawn from is in `run-02-transcript.md`, so a reader can check the quotes below against the source the same way they check any finding against `reference/`.
+
 Round 01 (in this folder) was the builder's own walkthrough. This run is the one that matters: a real non-technical person who had never seen the folder, given only the card and the law file, on a recorded transcript, with no coaching.
 
 ## Round 1: does the AI's finding match the law?
