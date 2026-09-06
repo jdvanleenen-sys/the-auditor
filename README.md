@@ -32,6 +32,32 @@ See `examples.md` for five worked examples before you run your first real audit.
 
 This is a Fair Housing ad-compliance auditor. It is also, underneath, a reusable auditing framework: the checker, the report shape, and the discipline rules aren't written for Fair Housing specifically. The standard is a cartridge, a folder with the standard text, a manifest, a sample artifact, and an audit. Swap the cartridge and the same framework checks any written standard.
 
+The shape of it: one engine that never changes, and a standard you slot in.
+
+```mermaid
+flowchart LR
+    subgraph CART ["cartridges: swap the standard"]
+      direction TB
+      FH["fair-housing (shipped)"]
+      WC["wcag"]
+      AS["app-store"]
+      BR["brand-vlway"]
+    end
+    ENG["engine-core.md<br/>the audit discipline<br/>(never changes)"]
+    LOAD["load.mjs"]
+    OUT(["a ready-to-run auditor<br/>for the standard you picked"])
+    FH --> ENG
+    WC --> ENG
+    AS --> ENG
+    BR --> ENG
+    ENG --> LOAD
+    LOAD --> OUT
+    style ENG stroke:#1f4e6b,stroke-width:2px
+    style OUT stroke:#27ae60
+```
+
+Same engine every time. Point it at a different cartridge and you get a different auditor, with zero changes to the engine or the checker. That is the product: not a Fair Housing auditor, a compliance engine that runs whichever standard you load.
+
 `reference/` ships exactly one standard. Fair Housing, quoted above. That's the whole product.
 
 The same engine runs four standards across four unrelated domains, each a cartridge, each added with no code change: Fair Housing law (`reference/fair-housing/`, shipped), WCAG 2.1 accessibility (`framework-proof/wcag/`), Apple App Store review policy (`framework-proof/app-store/`), and the AI the vL Way brand and voice guide (`framework-proof/brand-vlway/`).
