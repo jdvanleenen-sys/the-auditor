@@ -62,7 +62,8 @@
           "provision": "100.75c1",
           "text": "Using words, phrases, photographs, illustrations, symbols or forms which convey that dwellings are available or not available to a particular group of persons because of race, color, religion, sex, handicap, familial status, or national origin."
         }
-      ]
+      ],
+      "note": "Cautionary, the lowest fail tier, because 'bachelor pad' is a contested sex-coded phrase a reasonable reader could dispute indicates a preference at all. 'young professional starting out' is a neutral, non-class modifier and does not compound it upward under rule 6, which is why this stays Cautionary rather than escalating. Contrast the bachelor-pad-plus-single-guy example in examples.md, where a second clause codes the same class and pushes it to Violation."
     },
     {
       "id": "L7",
@@ -79,7 +80,8 @@
           "provision": "3604c",
           "text": "To make, print, or publish, or cause to be made, printed, or published any notice, statement, or advertisement, with respect to the sale or rental of a dwelling that indicates any preference, limitation, or discrimination based on race, color, religion, sex, handicap, familial status, or national origin, or an intention to make any such preference, limitation, or discrimination."
         }
-      ]
+      ],
+      "note": "Violation on its face: 'Christian family' names a religion as the intended occupant, no inference needed. 'close to their church community' reinforces the same class rather than introducing a new one (positive compounding under rule 6), but the first clause is already a Violation on its own. Nearby-church language would be fine as a location description alone; it convicts here only because it rides alongside an explicit religious preference."
     },
     {
       "id": "L8",
@@ -96,7 +98,8 @@
           "provision": "3604c",
           "text": "To make, print, or publish, or cause to be made, printed, or published any notice, statement, or advertisement, with respect to the sale or rental of a dwelling that indicates any preference, limitation, or discrimination based on race, color, religion, sex, handicap, familial status, or national origin, or an intention to make any such preference, limitation, or discrimination."
         }
-      ]
+      ],
+      "note": "High-risk, one inferential step, because 'must be able-bodied' is phrased as a requirement on the occupant's body rather than an outright 'no disabled tenants', so it takes a single step to read as a disability limitation. This matches the 'must be able-bodied to manage the stairs' pattern in phrase-guidance.md and examples.md. The stairs being a real feature does not cure it: the sentence makes able-bodiedness an occupancy requirement."
     },
     {
       "id": "L9",
@@ -113,7 +116,8 @@
           "provision": "3604c",
           "text": "To make, print, or publish, or cause to be made, printed, or published any notice, statement, or advertisement, with respect to the sale or rental of a dwelling that indicates any preference, limitation, or discrimination based on race, color, religion, sex, handicap, familial status, or national origin, or an intention to make any such preference, limitation, or discrimination."
         }
-      ]
+      ],
+      "note": "Violation on its face: 'English-speaking tenants only' limits occupancy by language, which the guidance treats as a national-origin proxy, no inference needed. The 'makes communication easier' rationale does not cure it. A benign motive does not change what the words convey to a reader, which is the 100.75c1 test."
     },
     {
       "id": "L10",
