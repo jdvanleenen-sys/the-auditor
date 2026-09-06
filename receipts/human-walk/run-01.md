@@ -4,6 +4,8 @@ run_date: 2026-09-04
 tester: "Jeff van Leenen (not the builder AI; the folder's owner, standing in as tester for this round)"
 ---
 
+Note on what this is. This is the builder's own pre-check, the folder owner walking the card before bringing in an outsider. It is not the outsider walk and is not the evidence the entry rests on. The real non-technical outsider walk is run-02, with its raw transcript in run-02-transcript.md. This file is kept for honesty, to show the folder was self-tested first, not as the headline human walk. If you are skimming, read run-02.
+
 # Human walk — run 01
 
 Task and answer bar as frozen in `TASK.md`, unedited. Finding handed over: L5, citing `100.75c1`, taken as-is from `receipts/cold-walk-01.md`. Exchange kept verbatim below, in order, including the terse final answer — not expanded or coached toward a fuller response.

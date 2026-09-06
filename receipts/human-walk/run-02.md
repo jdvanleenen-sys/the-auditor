@@ -12,6 +12,8 @@ The raw, unedited transcript this write-up is drawn from is in `run-02-transcrip
 
 Round 01 (in this folder) was the builder's own walkthrough. This run is the one that matters: a real non-technical person who had never seen the folder, given only the card and the law file, on a recorded transcript, with no coaching.
 
+A note on the recording, because a careful reader will check the metadata. The Granola meeting is filed under the folder owner's account only because that is the device the transcription tool ran on. It is not a sign the tester is the builder. Michelle took no part in creating this folder and had never seen it before the walk, and she was not coached (the owner did not speak). The strongest evidence that this is a genuine blind test and not a friendly audience is in the transcript itself: she opens by disagreeing with the tool ("I feel like you should be allowed to say you can't bring kids"), and only changes her mind after reading the law herself. A friendly plant does not start by arguing with the thing it is there to endorse.
+
 ## Round 1: does the AI's finding match the law?
 She was shown one finding ("No children please..." flagged FAIL, familial status, 100.75c1) and asked to confirm it against the law herself.
 
