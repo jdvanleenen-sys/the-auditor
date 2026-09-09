@@ -34,11 +34,14 @@ function cartridges() {
 }
 
 function frontmatter(text) {
-  const m = text.match(/^---\n([\s\S]*?)\n---/);
+  // CRLF-tolerant: a Windows checkout (git core.autocrlf=true) delivers \r\n line endings, so the
+  // newline matching here has to accept an optional \r or the whole block silently fails to parse
+  // and every field defaults to empty. Belt and suspenders with .gitattributes forcing eol=lf.
+  const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   const fm = {};
-  if (m) for (const line of m[1].split('\n')) {
+  if (m) for (const line of m[1].split(/\r?\n/)) {
     const kv = line.match(/^(\w+):\s*(.*)$/);
-    if (kv) fm[kv[1]] = kv[2].replace(/^["']|["']$/g, '').trim();
+    if (kv) fm[kv[1]] = kv[2].replace(/^["']|["']$/g, '').replace(/\r$/, '').trim();
   }
   return fm;
 }

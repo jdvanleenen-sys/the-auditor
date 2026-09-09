@@ -1,0 +1,6 @@
+# Force LF line endings on checkout for all text files, on every platform.
+# Without this, a Windows clone with git core.autocrlf=true gets CRLF, which broke
+# freshness.mjs's frontmatter parser (the README tells a judge to run that tool).
+# The parser is also made CRLF-tolerant as defense in depth; this makes the checkout
+# itself consistent so no newline-sensitive logic can silently misbehave.
+* text=auto eol=lf
