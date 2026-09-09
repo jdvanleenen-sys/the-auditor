@@ -102,9 +102,9 @@ Lawful only if the property qualifies for the Housing for Older Persons Act exem
 
 | Line | Quoted phrase | Verdict | Severity | Class | Provision | Reason |
 |---|---|---|---|---|---|---|
-| 1 | full of the right kind of people | FAIL | High-risk | (see note) | 100.75c1 | Conveys a group preference under 100.75c1's own "available or not available to a particular group" language, even with no class named outright. See rule 6d. |
+| 1 | full of the right kind of people | FAIL | High-risk | race or national origin (coded) | 100.75c1 | Conveys a group preference under 100.75c1's own "available or not available to a particular group" language. Named as the coded concern, race or national origin, per rule 6d's steering-case guidance, and marked coded because the artifact does not state a class outright. See rule 6d. |
 
-No single class is stated, and the artifact gives no further basis to pin down which one. A careful auditor names the ambiguity itself in the `Reason` rather than guessing a class. (A real audit with more context, a specific neighborhood description, or a pattern of similar phrasing might narrow this to race or national origin, per how this coded pattern is documented in steering cases; this snippet alone doesn't supply that context, so the finding says so rather than inventing it.)
+No class is stated outright. Per rule 6d the auditor still names the class the coded pattern points to (race or national origin, per how "the right kind of people" phrasing is documented in fair-housing steering cases) and marks it "coded" rather than explicit. That keeps the finding schema-consistent, a FAIL names a class, the way rule 8's report format and the Fair Housing audit schema both require, while staying honest that the ad never said it. The hedge lives in the Class value and the Reason, not in leaving the class blank. If the artifact supplied no basis at all to point to a class, the note would say so rather than inventing one; here the documented steering pattern is that basis. A real audit with more context might narrow or confirm it further.
 
 ## Example 8: compounding escalates the severity
 

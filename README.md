@@ -17,6 +17,8 @@ flowchart LR
     style S stroke:#27ae60
 ```
 
+**Standard and version.** The two binding provisions (42 U.S.C. 3604(c) and 24 CFR 100.75) ship verbatim in `reference/`, each with its official source and a retrieval date. See `VERSION.md` for versions and provenance, and run `node freshness.mjs` to check whether any shipped standard is past its re-verify window.
+
 ## Use it
 
 1. Drop `identity.md`, `rules.md`, `examples.md`, `reference/`, and this README into a Claude project (or point Claude Code at this folder).
@@ -56,7 +58,7 @@ flowchart LR
     style OUT stroke:#27ae60
 ```
 
-Same engine every time. Point it at a different cartridge and you get a different auditor, with zero changes to the engine or the checker. That is the product: not a Fair Housing auditor, a compliance engine that runs whichever standard you load.
+Same engine every time. Point it at a different cartridge and you get a different auditor, with zero changes to the engine or the checker. This entry is one auditor, Fair Housing, shipped in `reference/`. The other cartridges are the proof that the engine underneath is real and reusable, not extra entries competing for attention.
 
 `reference/` ships exactly one standard. Fair Housing, quoted above. That's the whole product.
 

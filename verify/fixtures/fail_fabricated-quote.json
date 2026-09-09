@@ -1,0 +1,18 @@
+{
+  "artifact": "sample-listing.md",
+  "findings": [
+    {
+      "id": "L5",
+      "quote": "No pets allowed and absolutely no loud parties after 9pm.",
+      "verdict": "FAIL",
+      "severity": "Violation",
+      "protectedClass": "familial status",
+      "citations": [
+        {
+          "provision": "100.75c1",
+          "text": "Using words, phrases, photographs, illustrations, symbols or forms which convey that dwellings are available or not available to a particular group of persons because of race, color, religion, sex, handicap, familial status, or national origin."
+        }
+      ]
+    }
+  ]
+}

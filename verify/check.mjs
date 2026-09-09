@@ -30,6 +30,8 @@
 //   5. class coverage      - every class in the cartridge's manifest appears in some finding
 //   6. provision coverage  - every requiredProvisions group has at least one id actually cited
 //   7. artifact coverage   - every numbered line in the cartridge's artifact has a matching finding
+//   8. quote-in-artifact   - (opt-in per cartridge) each finding's quote actually appears in the
+//                            artifact line it cites, so a fabricated or trimmed quote is caught
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, relative } from 'node:path';
@@ -46,6 +48,21 @@ function normalize(span) {
   t = t.trim();
   if (t.startsWith('"') && t.endsWith('"')) t = t.slice(1, -1); // strip wrapping quote marks
   return t.replace(/\s+/g, ' ').trim();
+}
+
+// Looser normalization for the quote-to-artifact check: strip markdown code ticks, fold em/en
+// dashes to a hyphen and smart quotes to straight, collapse whitespace, lowercase. This lets a
+// finding that quotes the ad in plain text still match an artifact line that wraps code in
+// backticks or uses a typographic dash, without letting a fabricated quote slip through.
+function normalizeLoose(s) {
+  return (s || '')
+    .toLowerCase()
+    .replace(/`/g, '')
+    .replace(/[—–]/g, '-')
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 // ---------- cartridge loading ----------
@@ -161,6 +178,8 @@ function loadCartridges(cartridgeRootDir) {
       generalOnlyIds: new Set(manifest.generalOnlyIds || []),
       requiredProvisions: manifest.requiredProvisions || [],
       artifactPath: join(dir, manifest.artifact),
+      artifact: manifest.artifact,
+      quoteInArtifact: manifest.quoteInArtifact || false,
       artifactAuditPath: join(auditsDir, manifest.artifactAudit),
       auditsDir,
       audits,
@@ -261,7 +280,31 @@ function validateAudit(audit, cartridge) {
     anchorAndVerbatimCheck(f, cartridge, errs);
     phraseSanityCheck(f, cartridge, errs);
   }
+  quoteInArtifactCheck(audit, cartridge, errs);
   return errs;
+}
+
+// Quote-to-artifact check (opt-in per cartridge via manifest "quoteInArtifact": true). For a
+// text-based standard like Fair Housing, a finding's quote must actually appear in the artifact
+// line it cites, so a fabricated or trimmed quote is caught, not just a bad law citation. It runs
+// only on the cartridge's designated artifact (audit.artifact === cartridge.artifact), so an
+// illustrative audit written against other snippets (examples.findings.json) is not checked against
+// the wrong source. Cartridges whose findings describe measured properties instead of literal text
+// (WCAG contrast ratios, say) leave the flag off and skip this entirely.
+function quoteInArtifactCheck(audit, cartridge, errs) {
+  if (!cartridge.quoteInArtifact) return;
+  if (audit.artifact !== cartridge.artifact) return;
+  if (!existsSync(cartridge.artifactPath)) return;
+  const artifactText = readFileSync(cartridge.artifactPath, 'utf8');
+  const lineText = {};
+  for (const m of artifactText.matchAll(/\*\*(L\d+)\.\*\*\s*(.*)/g)) lineText[m[1]] = m[2];
+  for (const f of audit.findings) {
+    const lt = lineText[f.id];
+    if (lt === undefined || !f.quote) continue;
+    if (!normalizeLoose(lt).includes(normalizeLoose(f.quote))) {
+      errs.push(`${f.id}: quote is not found in the artifact line it cites - a finding must quote the artifact verbatim, not paraphrase or fabricate it`);
+    }
+  }
 }
 
 // ---------- coverage checks (per cartridge, across that cartridge's own real audits) ----------

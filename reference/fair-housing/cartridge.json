@@ -7,5 +7,6 @@
   "generalOnlyIds": ["100.75"],
   "requiredProvisions": [["3604c"], ["100.75c1", "100.75c2", "100.75c3", "100.75c4"]],
   "artifact": "sample-listing.md",
-  "artifactAudit": "sample-listing.findings.json"
+  "artifactAudit": "sample-listing.findings.json",
+  "quoteInArtifact": true
 }
