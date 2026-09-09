@@ -30,6 +30,28 @@ flowchart LR
 
 See `examples.md` for five worked examples before you run your first real audit. `reference/fair-housing/sample-listing.md` is the synthetic listing this build's own tests run against. Audit it yourself and compare your findings to `verify/audits/fair-housing/sample-listing.findings.json` if you want to sanity-check the auditor before trusting it on something real.
 
+## Verify it yourself
+
+Don't take the report's word for it. The citations are machine-checked. From the repo, run:
+
+```
+node verify/check.mjs
+```
+
+Every real audit and every deliberately-broken fixture should pass, including the ones built to fail:
+
+```
+ok: verify/audits/fair-housing/examples.findings.json (9 findings)
+ok: verify/audits/fair-housing/sample-listing.findings.json (12 findings)
+ok [fair-housing]: every required provision group is cited
+ok [fair-housing]: every artifact line has a finding
+ok (failed as required): verify/fixtures/fail_fabricated-quote.json
+ok (failed as required): verify/fixtures/fail_misquote.json
+...
+```
+
+`node verify/check.mjs --root framework-proof` validates the three proof cartridges (WCAG, App Store, brand) with the same unchanged checker. `node freshness.mjs` reports each standard's source and capture date.
+
 ## Built on a reusable framework
 
 This is a Fair Housing ad-compliance auditor. It is also, underneath, a reusable auditing framework: the checker, the report shape, and the discipline rules aren't written for Fair Housing specifically. The standard is a cartridge, a folder with the standard text, a manifest, a sample artifact, and an audit. Swap the cartridge and the same framework checks any written standard.
