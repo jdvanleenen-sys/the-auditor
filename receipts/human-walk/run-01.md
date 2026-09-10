@@ -4,7 +4,7 @@ run_date: 2026-09-04
 tester: "Jeff van Leenen (not the builder AI; the folder's owner, standing in as tester for this round)"
 ---
 
-Note on what this is. This is the builder's own pre-check, the folder owner walking the card before bringing in an outsider. It is not the outsider walk and is not the evidence the entry rests on. The real non-technical outsider walk is run-02, with its raw transcript in run-02-transcript.md. This file is kept for honesty, to show the folder was self-tested first, not as the headline human walk. If you are skimming, read run-02.
+Note on what this is. This is the builder's own pre-check, the folder owner walking the card before bringing in the non-technical tester. It is not the tester walk and is not the evidence the entry rests on. The real non-technical walk is run-02, with its raw transcript in run-02-transcript.md. This file is kept for honesty, to show the folder was self-tested first, not as the headline human walk. If you are skimming, read run-02.
 
 # Human walk — run 01
 

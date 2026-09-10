@@ -1,6 +1,6 @@
 ---
 title: "Human walk run 02, raw transcript"
-tester: "Michelle, a non-technical outsider (not the builder)"
+tester: "Michelle, the builder's partner. Non-technical, not the builder, no prior exposure to the folder before the walk."
 date: 2026-09-05
 tool: "Granola voice transcript, unedited"
 note: "This is the raw recording behind run-02.md. It is kept verbatim, hesitations and disagreement and all, and not cleaned up. Granola labels each turn 'Me' for the account that recorded it; the account owner did not speak or coach during the walk, so every 'Me' turn here is the tester (Michelle) reading the card and thinking out loud. run-02.md quotes from this transcript."
