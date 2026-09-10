@@ -17,6 +17,12 @@ flowchart LR
     style S stroke:#27ae60
 ```
 
+## See it run
+
+![The Auditor running: the verifier passing every gate, a real finding checked against the law in reference/, the four cartridges listed, and the same engine swapped onto Apple's App Store rules with no code change](docs/demo.gif)
+
+About 80 seconds, no narration: the verifier passing every gate (including the deliberately-broken fixtures that must fail), the "No children please" line flagged FAIL with its citation matching the law verbatim in `reference/`, and the same unchanged engine loaded onto a different standard and re-run green across all four cartridges.
+
 **Standard and version.** The two binding provisions (42 U.S.C. 3604(c) and 24 CFR 100.75) ship verbatim in `reference/`, each with its official source and a retrieval date. See `VERSION.md` for versions and provenance, and run `node freshness.mjs` to check whether any shipped standard is past its re-verify window.
 
 ## Use it
